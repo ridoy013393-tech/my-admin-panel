@@ -1,708 +1,292 @@
-<!-- admin_shop.html -->
 <!DOCTYPE html>
 <html lang="bn">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Shop Manager Pro - Admin (Sound)</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Panel - Premium</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
-
     <style>
-        :root { --bg: #f4f7f6; --card: #ffffff; --text: #2d3436; --primary: #00b894; --nav: #ffffff; --danger: #ff4757; --info: #0984e3; }
-        .dark-mode { --bg: #1e272e; --card: #2f3640; --text: #dcdde1; --primary: #00cec9; --nav: #2f3640; }
-
-        body { margin: 0; font-family: 'Segoe UI', sans-serif; background: var(--bg); color: var(--text); transition: 0.3s; display: flex; justify-content: center; }
-        .shell { width: 100%; max-width: 600px; background: var(--bg); min-height: 100vh; position: relative; padding-bottom: 90px; }
-
-        /* INPUTS & BUTTONS */
-        .inp, .sel, textarea { width: 100%; padding: 12px; margin: 8px 0; border: 1px solid #e0e0e0; border-radius: 10px; background: var(--card); color: var(--text); outline: none; box-sizing: border-box; font-family: inherit; }
-        .btn { width: 100%; padding: 12px; border: none; border-radius: 10px; background: var(--primary); color: white; font-weight: bold; cursor: pointer; margin-top: 10px; box-shadow: 0 4px 10px rgba(0,184,148,0.3); transition: 0.2s; }
-        .btn-sm { padding: 5px 10px; font-size: 12px; border-radius: 5px; cursor: pointer; border: none; color: white; margin-left: 5px; }
-
-        /* AUTH SCREEN */
-        #auth-screen { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: var(--bg); z-index: 999; display: flex; align-items: center; justify-content: center; }
-        .auth-box { width: 85%; max-width: 350px; background: var(--card); padding: 30px; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); text-align: center; }
-
-        /* LAYOUT */
-        .header { background: var(--card); padding: 15px 20px; display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; z-index: 50; box-shadow: 0 2px 10px rgba(0,0,0,0.05); }
-        .dash-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; padding: 15px; }
-        .dash-card { background: var(--card); padding: 15px; border-radius: 15px; text-align: center; box-shadow: 0 4px 10px rgba(0,0,0,0.02); }
-        .dash-val { font-size: 18px; font-weight: bold; margin-top: 5px; color: var(--text); }
-        .dash-lbl { font-size: 11px; color: #b2bec3; }
-
-        .view-section { display: none; padding: 15px; }
-        .card { background: var(--card); padding: 20px; margin-bottom: 15px; border-radius: 15px; box-shadow: 0 5px 15px rgba(0,0,0,0.03); }
-        .item-row { display: flex; justify-content: space-between; align-items: center; padding: 12px; background: var(--card); border-radius: 10px; margin-bottom: 8px; border-bottom: 1px solid rgba(0,0,0,0.05); }
+        @import url('https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@300;400;600&display=swap');
         
-        .bottom-nav { position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); width: 90%; max-width: 450px; background: var(--nav); padding: 10px 10px; display: flex; justify-content: space-between; box-shadow: 0 10px 30px rgba(0,0,0,0.1); z-index: 50; border-radius: 50px; }
-        .nav-item { text-align: center; color: #b2bec3; cursor: pointer; flex: 1; padding: 5px; border-radius: 50%; }
-        .nav-item.active { color: var(--primary); background: rgba(0,184,148,0.1); }
-        .nav-item i { font-size: 18px; }
+        body { font-family: 'Hind Siliguri', sans-serif; margin: 0; background: #f0f2f5; color: #333; padding-bottom: 80px; }
 
-        .stk-btn { width: 25px; height: 25px; border-radius: 5px; border:none; color:white; font-weight:bold; cursor:pointer; }
-        .stk-plus { background: var(--primary); }
-        .stk-minus { background: var(--danger); }
+        .top-bar { background: white; padding: 15px 20px; box-shadow: 0 2px 10px rgba(0,0,0,0.05); position: sticky; top: 0; z-index: 100; display: flex; justify-content: space-between; align-items: center; }
+        .top-bar h3 { margin: 0; color: #2c3e50; font-size: 20px; font-weight: 700; }
+        .stats { font-size: 13px; color: #007bff; font-weight: 600; background: #eef7ff; padding: 5px 10px; border-radius: 20px; }
 
-        .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); align-items: center; justify-content: center; z-index: 100; backdrop-filter: blur(3px); }
-        .modal-box { background: var(--card); width: 85%; max-width: 350px; padding: 25px; border-radius: 20px; position: relative; max-height: 85vh; overflow-y: auto; }
-        .cat-tag { display: inline-block; background: var(--primary); color: white; padding: 2px 6px; border-radius: 6px; font-size: 10px; margin-right: 5px;}
-        .label { font-size: 11px; font-weight: bold; color: #636e72; display: block; margin-top: 5px;}
+        #loginScreen { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: white; z-index: 2000; display: flex; justify-content: center; align-items: center; }
+        .login-box { text-align: center; width: 85%; max-width: 320px; padding: 30px; border-radius: 15px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); }
+        .login-box input { width: 100%; padding: 12px; margin: 15px 0; border: 1px solid #ddd; border-radius: 8px; font-size: 16px; outline: none; box-sizing: border-box; }
+        .btn-primary { width: 100%; padding: 12px; background: #007bff; color: white; border: none; border-radius: 8px; font-size: 16px; font-weight: bold; cursor: pointer; transition: 0.3s; }
+        
+        .container { padding: 15px; max-width: 600px; margin: 0 auto; }
+        .search-bar { width: 100%; padding: 14px 20px; border: none; border-radius: 30px; background: white; box-shadow: 0 4px 15px rgba(0,0,0,0.05); margin-bottom: 20px; font-size: 15px; outline: none; box-sizing: border-box; }
+
+        .product-item { 
+            background: white; padding: 12px; border-radius: 12px; margin-bottom: 12px; 
+            display: flex; align-items: center; gap: 12px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.02); border-left: 4px solid transparent; transition: 0.2s;
+        }
+        .p-img { width: 60px; height: 60px; border-radius: 8px; object-fit: cover; background: #f8f9fa; flex-shrink: 0; border: 1px solid #eee; }
+        .p-info { flex: 1; overflow: hidden; }
+        .p-models { font-size: 11px; color: #666; background: #f1f3f5; padding: 3px 8px; border-radius: 4px; display: inline-block; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 100%; }
+        .p-meta { font-size: 12px; margin-top: 5px; font-weight: 700; color: #27ae60; }
+        
+        .actions button { width: 35px; height: 35px; border: none; border-radius: 50%; cursor: pointer; margin-left: 5px; color: white; display: flex; align-items: center; justify-content: center; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
+        .btn-edit { background: #f39c12; }
+        .btn-del { background: #e74c3c; }
+
+        .bottom-nav { position: fixed; bottom: 0; left: 0; width: 100%; background: white; box-shadow: 0 -5px 15px rgba(0,0,0,0.05); display: flex; justify-content: space-around; padding: 12px 0; z-index: 500; border-radius: 20px 20px 0 0; }
+        .nav-item { border: none; background: none; display: flex; flex-direction: column; align-items: center; color: #999; cursor: pointer; font-size: 11px; gap: 5px; font-weight: 600; }
+        .nav-item.active { color: #007bff; }
+        .nav-add { background: linear-gradient(135deg, #007bff, #0056b3); color: white; width: 55px; height: 55px; border-radius: 50%; margin-top: -35px; box-shadow: 0 8px 15px rgba(0,123,255,0.4); border: 4px solid #f0f2f5; display: flex; align-items: center; justify-content: center; }
+        .nav-add i { font-size: 22px; color: white; }
+
+        .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); z-index: 1500; display: none; justify-content: center; align-items: end; backdrop-filter: blur(3px); }
+        .modal { background: white; width: 100%; max-width: 600px; padding: 25px; border-radius: 25px 25px 0 0; max-height: 90vh; overflow-y: auto; animation: slideUp 0.3s ease; }
+        @keyframes slideUp { from { transform: translateY(100%); } to { transform: translateY(0); } }
+
+        .form-group { margin-bottom: 15px; }
+        .form-control { width: 100%; padding: 14px; border: 1px solid #e0e0e0; border-radius: 10px; font-family: inherit; box-sizing: border-box; background: #fcfcfc; }
+        #magicSelect { border: 2px solid #007bff; background: #eef7ff; color: #0056b3; font-weight: bold; cursor: pointer; }
     </style>
 </head>
 <body>
 
-<div class="shell">
-    <div id="auth-screen">
-        <div class="auth-box">
-            <h2 style="color:var(--primary);">অ্যাডমিন প্যানেল</h2>
-            <input type="email" id="email" class="inp" placeholder="ইমেইল">
-            <input type="password" id="pass" class="inp" placeholder="পাসওয়ার্ড">
-            <button class="btn" id="login-btn">লগইন</button>
+    <!-- Sound Audio Tags -->
+    <audio id="sndClick" src="https://cdn.pixabay.com/download/audio/2022/03/24/audio_c8b84606f6.mp3?filename=pop-39222.mp3"></audio>
+    <audio id="sndSuccess" src="https://cdn.pixabay.com/download/audio/2021/08/04/audio_0625c1539c.mp3?filename=success-1-6297.mp3"></audio>
+    <audio id="sndError" src="https://cdn.pixabay.com/download/audio/2022/03/10/audio_c2901e3e78.mp3?filename=error-2-36058.mp3"></audio>
+
+    <div id="loginScreen">
+        <div class="login-box">
+            <i class="fas fa-shield-alt" style="font-size: 40px; color: #007bff; margin-bottom: 15px;"></i>
+            <h3>Admin Panel</h3>
+            <input type="password" id="passInput" placeholder="Password">
+            <button class="btn-primary" onclick="checkPass()">Login</button>
         </div>
     </div>
 
-    <div id="app-content" style="display:none;">
-        <div class="header">
-            <span style="font-weight:bold; color:var(--primary);"><i class="fas fa-user-shield"></i> Shop Manager</span>
-            <div>
-                <i class="fas fa-moon" style="cursor:pointer; margin-right:15px;" onclick="window.toggleDark()"></i>
-                <i class="fas fa-sign-out-alt" style="color:var(--danger); cursor:pointer;" onclick="window.logout()"></i>
-            </div>
+    <div id="adminPanel" style="display: none;">
+        <div class="top-bar">
+            <h3>Display Zone</h3>
+            <span class="stats">Items: <span id="totalCount">0</span></span>
         </div>
 
-        <div id="view-dash" class="view-section" style="display:block;">
-            <div class="dash-grid">
-                <div class="dash-card">
-                    <i class="fas fa-chart-line" style="color:var(--info);"></i>
-                    <div class="dash-val">৳<span id="d-sale">0</span></div>
-                    <div class="dash-lbl">আজকের বিক্রি</div>
-                </div>
-                <div class="dash-card">
-                    <i class="fas fa-hand-holding-usd" style="color:var(--primary);"></i>
-                    <div class="dash-val">৳<span id="d-profit">0</span></div>
-                    <div class="dash-lbl">এই মাসের লাভ</div>
-                </div>
-                <div class="dash-card">
-                    <i class="fas fa-boxes" style="color:#e17055;"></i>
-                    <div class="dash-val">৳<span id="d-stock-val">0</span></div>
-                    <div class="dash-lbl">মোট স্টকের দাম</div>
-                </div>
-                <div class="dash-card">
-                    <i class="fas fa-file-invoice-dollar" style="color:var(--danger);"></i>
-                    <div class="dash-val">৳<span id="d-due">0</span></div>
-                    <div class="dash-lbl">মোট বকেয়া (Due)</div>
+        <div class="container">
+            <input type="text" class="search-bar" id="adminSearch" onkeyup="filterList()" placeholder="🔍 নাম বা মডেল দিয়ে খুঁজুন...">
+            <div id="productList">
+                <div style="text-align:center; margin-top:50px; color:#888;">
+                    <i class="fas fa-spinner fa-spin" style="font-size:24px;"></i><br><br>ডাটা লোড হচ্ছে...
                 </div>
             </div>
-        </div>
-
-        <div id="view-add" class="view-section">
-            <div class="card">
-                <h3 style="margin-top:0; color:var(--primary);">পণ্য যুক্ত / আপডেট করুন</h3>
-                <div style="background:#f1f2f6; padding:10px; border-radius:10px; margin-bottom:15px; border:1px dashed var(--primary);">
-                    <label style="font-size:12px; font-weight:bold; color:#636e72;">সিরিয়াল (প্রোডাক্ট কোড)</label>
-                    <input type="text" id="p-serial-in" class="inp" placeholder="যেমন: 107 (ফাঁকা রাখলে অটো হবে)" onkeyup="window.checkSerial()" style="text-align:center; font-weight:bold;">
-                    <small id="serial-msg" style="color:var(--primary); font-size:11px; display:block; text-align:center; min-height:15px;"></small>
-                </div>
-
-                <label class="label">পণ্যের নাম</label>
-                <input type="text" id="p-name" class="inp" placeholder="Example: Vivo Y20">
-
-                <label class="label">ক্যাটাগরি</label>
-                <div style="display:flex; gap:5px;">
-                    <select id="p-cat" class="sel" style="flex:1;">
-                        <option value="General">General</option>
-                    </select>
-                    <button class="btn" style="width:50px; margin:8px 0;" onclick="window.addCategory()">+</button>
-                </div>
-
-                <div style="display:flex; gap:10px;">
-                    <div style="flex:1">
-                        <label class="label">কেনা দাম</label>
-                        <input type="number" id="p-buy" class="inp" min="0">
-                    </div>
-                    <div style="flex:1">
-                        <label class="label">বেচা দাম</label>
-                        <input type="number" id="p-sell" class="inp" min="0">
-                    </div>
-                </div>
-
-                <label class="label">স্টক পরিমাণ (যোগ হবে)</label>
-                <input type="number" id="p-stock" class="inp" placeholder="Qty" min="0">
-
-                <button class="btn" id="save-btn" onclick="window.saveProduct()">সেভ করুন</button>
-            </div>
-        </div>
-
-        <div id="view-list" class="view-section">
-            <input type="text" id="admin-search" class="inp" placeholder="🔍 নাম বা কোড দিয়ে খুঁজুন..." onkeyup="window.filterAdminList()">
-            <div style="display:flex; justify-content:space-between; margin-bottom:10px;">
-                <select id="filter-cat" class="sel" style="width:60%; margin:0;" onchange="window.filterAdminList()">
-                    <option value="">সকল ক্যাটাগরি</option>
-                </select>
-                <span id="total-items" style="align-self:center; font-size:12px; font-weight:bold;">0 Products</span>
-            </div>
-            <div id="stock-list"></div>
-        </div>
-
-        <div id="view-due" class="view-section">
-            <h3 style="text-align:center; margin-top:0;">বাকি খাতা (কাস্টমার অনুযায়ী)</h3>
-            <input type="text" id="due-search" class="inp" placeholder="নাম বা ফোন নম্বর খুঁজুন..." onkeyup="window.filterDueList()">
-            <div id="due-list" style="margin-top:10px;"></div>
-        </div>
-
-        <div id="view-report" class="view-section">
-            <div style="display:flex; gap:10px; margin-bottom:15px;">
-                <button class="btn-sm" style="background:#636e72; flex:1;" onclick="window.setReportMode('day')">Daily</button>
-                <button class="btn-sm" style="background:#636e72; flex:1;" onclick="window.setReportMode('month')">Monthly</button>
-                <button class="btn-sm" style="background:#636e72; flex:1;" onclick="window.setReportMode('year')">Yearly</button>
-            </div>
-            <input type="date" id="report-date" class="inp" onchange="window.generateReport()">
-            <h4 id="report-title" style="text-align:center; margin:10px 0;"></h4>
-            <div class="card" style="text-align:center;">
-                <div style="font-size:12px; color:#b2bec3;">মোট বিক্রি</div>
-                <div style="font-size:24px; font-weight:bold; color:var(--info);">৳<span id="rep-total">0</span></div>
-                <div style="font-size:12px; color:#b2bec3; margin-top:10px;">মোট লাভ</div>
-                <div style="font-size:24px; font-weight:bold; color:var(--primary);">৳<span id="rep-profit">0</span></div>
-            </div>
-            <div id="sales-list"></div>
         </div>
 
         <div class="bottom-nav">
-            <div class="nav-item active" onclick="window.switchTab('dash', this)"><i class="fas fa-home"></i></div>
-            <div class="nav-item" onclick="window.switchTab('add', this)"><i class="fas fa-plus-circle"></i></div>
-            <div class="nav-item" onclick="window.switchTab('list', this)"><i class="fas fa-list"></i></div>
-            <div class="nav-item" onclick="window.switchTab('due', this)"><i class="fas fa-hand-holding-usd"></i></div>
-            <div class="nav-item" onclick="window.switchTab('report', this)"><i class="fas fa-chart-pie"></i></div>
+            <button class="nav-item active" onclick="playSnd('click'); scrollToTop()"><i class="fas fa-home"></i> Home</button>
+            <button class="nav-item nav-add" onclick="playSnd('click'); openModal('add')"><i class="fas fa-plus"></i></button>
+            <button class="nav-item" onclick="logout()"><i class="fas fa-sign-out-alt"></i> Logout</button>
         </div>
     </div>
-</div>
 
-<!-- DUE PAYMENT MODAL -->
-<div id="due-modal" class="modal">
-    <div class="modal-box">
-        <span onclick="window.closeModal('due-modal')" style="float:right; cursor:pointer;">&times;</span>
-        <h3>বাকি পরিশোধ</h3>
-        <p>কাস্টমার: <b id="dm-name"></b></p>
-        <p>বর্তমান বাকি: <span style="color:red; font-weight:bold;">৳<span id="dm-amount"></span></span></p>
-        <input type="number" id="dm-pay" class="inp" placeholder="টাকার পরিমাণ" min="0">
-        <button class="btn" onclick="window.confirmDuePay()">জমা নিন</button>
-    </div>
-</div>
+    <div class="modal-overlay" id="modalOverlay">
+        <div class="modal">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px; border-bottom:1px solid #eee; padding-bottom:10px;">
+                <h3 id="modalTitle" style="margin:0; color:#333;">Add Product</h3>
+                <button onclick="closeModal()" style="border:none; background:none; font-size:24px; color:#999; cursor:pointer;">&times;</button>
+            </div>
+            <input type="hidden" id="editId">
+            
+            <div class="form-group">
+                <label style="color:#007bff;"><b>⚡ Magic Select</b></label>
+                <select class="form-control" id="magicSelect" onchange="applyMagic()">
+                    <option value="">-- মডেল সিলেক্ট করুন --</option>
+                    <optgroup label="🔵 Vivo">
+                        <option value="vivo_y20">Vivo Y20 / Y12s Series</option>
+                        <option value="vivo_y91">Vivo Y91 / Y93 / Y95</option>
+                        <option value="vivo_y11">Vivo Y11 / Y12 / Y15</option>
+                    </optgroup>
+                    <optgroup label="🟢 Oppo & Realme">
+                        <option value="oppo_a5s">Oppo A5s / A12 / Realme 2</option>
+                        <option value="oppo_a15">Oppo A15 / A15s</option>
+                        <option value="realme_5">Realme 5 / 5i / C3</option>
+                    </optgroup>
+                    <optgroup label="🟠 Xiaomi">
+                        <option value="redmi_9a">Redmi 9A / 9C / 10A</option>
+                        <option value="redmi_note8">Redmi Note 8</option>
+                        <option value="poco_m3">Poco M3 / Redmi 9T</option>
+                    </optgroup>
+                </select>
+            </div>
 
-<!-- CUSTOMER EDIT MODAL -->
-<div id="edit-cust-modal" class="modal">
-    <div class="modal-box">
-        <span onclick="window.closeModal('edit-cust-modal')" style="float:right; cursor:pointer;">&times;</span>
-        <h3 style="color:var(--info);">কাস্টমার এডিট</h3>
-        <label class="label">কাস্টমার নাম</label>
-        <input type="text" id="ec-name" class="inp">
-        <label class="label">মোট বাকি (Total Due)</label>
-        <input type="number" id="ec-due" class="inp" min="0">
-        
-        <button class="btn" onclick="window.saveCustUpdate()" style="background:var(--primary);">আপডেট করুন</button>
-        <button class="btn" onclick="window.deleteCustomer()" style="background:var(--danger); margin-top:10px;">কাস্টমার ডিলিট</button>
-    </div>
-</div>
+            <div class="form-group"><label>Category</label><select class="form-control" id="pCategory"><option value="Samsung">Samsung</option><option value="Xiaomi">Xiaomi</option><option value="Vivo">Vivo</option><option value="Oppo">Oppo</option><option value="Realme">Realme</option><option value="Infinix">Infinix</option><option value="Tecno">Tecno</option></select></div>
+            <div class="form-group"><label>Name</label><input type="text" class="form-control" id="pName" placeholder="Product Name"></div>
+            <div class="form-group"><label>Models</label><textarea class="form-control" id="pModels" style="height:60px"></textarea></div>
+            <div style="display:flex; gap:15px;">
+                <div class="form-group" style="flex:1"><label>Price (৳)</label><input type="number" class="form-control" id="pPrice"></div>
+                <div class="form-group" style="flex:1"><label>Stock</label><input type="number" class="form-control" id="pStock"></div>
+            </div>
+            <div class="form-group"><label>Image URL</label><input type="text" class="form-control" id="pImage"></div>
 
-<!-- EDIT SALE MODAL -->
-<div id="edit-sale-modal" class="modal">
-    <div class="modal-box">
-        <div style="display:flex; justify-content:space-between; align-items:center;">
-            <h3 style="margin:0; color:var(--primary);">বিক্রি এডিট করুন</h3>
-            <span onclick="window.closeModal('edit-sale-modal')" style="font-size:20px; cursor:pointer;">&times;</span>
+            <button class="btn-primary" id="saveBtn" onclick="saveData()">Save Product</button>
+            <button class="btn-primary" id="updateBtn" onclick="updateData()" style="background:#f39c12; display:none;">Update Product</button>
         </div>
-        <hr style="border:0; border-top:1px solid #eee; margin:15px 0;">
-        
-        <label class="label">কাস্টমার তথ্য</label>
-        <input type="text" id="es-customer" class="inp" placeholder="Name (Phone)" readonly style="background:#f0f0f0;">
-        <label class="label">পণ্যের বিবরণ (শুধুমাত্র দেখার জন্য)</label>
-        <textarea id="es-items" class="inp" rows="3" readonly style="background:#f0f0f0;"></textarea>
-
-        <div style="display:flex; gap:10px;">
-            <div style="flex:1"><label class="label">মোট বিল</label><input type="number" id="es-total" class="inp" oninput="window.calcEdit()" min="0"></div>
-            <div style="flex:1"><label class="label">লাভ (Profit)</label><input type="number" id="es-profit" class="inp" min="0"></div>
-        </div>
-
-        <div style="display:flex; gap:10px;">
-            <div style="flex:1"><label class="label">জমা (Paid)</label><input type="number" id="es-paid" class="inp" oninput="window.calcEdit()" min="0"></div>
-            <div style="flex:1"><label class="label">বাকি (Due)</label><input type="number" id="es-due" class="inp" readonly style="background:#f1f1f1;"></div>
-        </div>
-
-        <button class="btn" onclick="window.saveSaleUpdate()" style="background:var(--info);">টাকা/বিল আপডেট করুন</button>
-        <button class="btn" onclick="window.deleteSale()" style="background:var(--danger); margin-top:10px;">ডিলিট (স্টক ফেরত যাবে)</button>
     </div>
-</div>
 
-<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
-<script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js";
-    import { getAuth, signInWithEmailAndPassword, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js";
-    import { getDatabase, ref, push, onValue, remove, update, get, set, child, runTransaction, increment } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-database.js";
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
 
-    const firebaseConfig = {
-        apiKey: "AIzaSyCFnFbLhLN3mAUrmcjFkcb9DpBp5EPmKnQ",
-        authDomain: "heke-452d6.firebaseapp.com",
-        databaseURL: "https://heke-452d6-default-rtdb.firebaseio.com",
-        projectId: "heke-452d6",
-        storageBucket: "heke-452d6.firebasestorage.app",
-        messagingSenderId: "33927182418",
-        appId: "1:33927182418:web:b51257c4476b330739478b",
-        measurementId: "G-C4GQPTEYK4"
-    };
+    <script>
+        const firebaseConfig = {
+          apiKey: "AIzaSyB6T58YzpxyZsY_jnnHXhU__YYi0-fuENA",
+          authDomain: "soping-8b0b1.firebaseapp.com",
+          databaseURL: "https://soping-8b0b1-default-rtdb.firebaseio.com",
+          projectId: "soping-8b0b1",
+          storageBucket: "soping-8b0b1.firebasestorage.app",
+          messagingSenderId: "516440071124",
+          appId: "1:516440071124:web:149502c15abe71c41b9441",
+          measurementId: "G-1SC6C3Q8SS"
+        };
+        firebase.initializeApp(firebaseConfig);
+        const db = firebase.firestore();
+        let allData = [];
 
-    const app = initializeApp(firebaseConfig);
-    const auth = getAuth(app);
-    const db = getDatabase(app);
-
-    // --- SOUND MANAGER ---
-    const sounds = {
-        success: new Audio('https://cdn.pixabay.com/download/audio/2021/08/04/audio_0625c1539c.mp3'), // Cash register
-        error: new Audio('https://cdn.pixabay.com/download/audio/2021/08/04/audio_c6ccf3232f.mp3'),   // Error beep
-        click: new Audio('https://cdn.pixabay.com/download/audio/2022/03/15/audio_73d22e0322.mp3'),   // Soft pop
-        trash: new Audio('https://cdn.pixabay.com/download/audio/2022/03/10/audio_c8c8a73467.mp3')    // Delete swoosh
-    };
-
-    window.playSound = (type) => {
-        if(sounds[type]) {
-            sounds[type].currentTime = 0;
-            sounds[type].play().catch(e => console.log("Sound error:", e));
-        }
-    };
-
-    let allProducts = [], allSales = [], allCats = [], allCustomers = [];
-    let reportMode = 'day';
-    let selectedCustomerKey = null;
-    let editingSaleKey = null;
-    let originalSaleDue = 0;
-
-    if(localStorage.getItem('theme') === 'dark') document.body.classList.add('dark-mode');
-    window.toggleDark = () => {
-        window.playSound('click');
-        document.body.classList.toggle('dark-mode');
-        localStorage.setItem('theme', document.body.classList.contains('dark-mode') ? 'dark' : 'light');
-    };
-
-    onAuthStateChanged(auth, u => {
-        if(u && u.email === "admin@gmail.com") {
-            document.getElementById('auth-screen').style.display = 'none';
-            document.getElementById('app-content').style.display = 'block';
-            document.getElementById('report-date').valueAsDate = new Date();
-            loadAllData();
-        } else {
-            document.getElementById('auth-screen').style.display = 'flex';
-        }
-    });
-
-    document.getElementById('login-btn').addEventListener('click', () => {
-        window.playSound('click');
-        const email = document.getElementById('email').value;
-        const pass = document.getElementById('pass').value;
-        signInWithEmailAndPassword(auth, email, pass)
-        .catch((e) => showToast("ভুল ইমেইল বা পাসওয়ার্ড: " + e.message, "red"));
-    });
-
-    window.logout = () => { window.playSound('click'); signOut(auth); };
-
-    window.switchTab = (id, btn) => {
-        window.playSound('click');
-        document.querySelectorAll('.view-section').forEach(d => d.style.display='none');
-        document.getElementById('view-'+id).style.display='block';
-        document.querySelectorAll('.nav-item').forEach(b => b.classList.remove('active'));
-        btn.classList.add('active');
-    };
-
-    function loadAllData() {
-        onValue(ref(db, 'settings/categories'), s => {
-            allCats = s.val() || ["General"];
-            updateCatDropdowns();
-        });
-
-        onValue(ref(db, 'products'), s => {
-            const list = document.getElementById('stock-list');
-            list.innerHTML = "";
-            allProducts = [];
-            let stockVal = 0;
-            if(!s.exists()) set(ref(db, 'productCounter'), 0);
-            s.forEach(c => {
-                const p = c.val();
-                const serial = p.serial || '---';
-                allProducts.push({key: c.key, ...p, serial});
-                stockVal += (Number(p.buyPrice) * Number(p.stock));
-                
-                list.insertAdjacentHTML('beforeend', `
-                <div class="item-row p-row" data-search="${p.name.toLowerCase()} ${serial}" data-cat="${p.category||'General'}">
-                    <div><div style="font-weight:bold;">${p.name} <span class="cat-tag">${p.category||'General'}</span></div>
-                    <div style="font-size:12px; opacity:0.7;">Code: ${serial} | কেনা: ${p.buyPrice} | বেচা: ${p.sellPrice}</div></div>
-                    <div style="text-align:right;">
-                        <div style="margin-bottom:5px; display:flex; align-items:center; gap:5px; justify-content:end;">
-                             <button class="stk-btn stk-minus" onclick="window.adjustStock('${c.key}', -1)">-</button>
-                             <span style="font-weight:bold; width:30px; text-align:center;">${p.stock}</span>
-                             <button class="stk-btn stk-plus" onclick="window.adjustStock('${c.key}', 1)">+</button>
-                        </div>
-                        <div style="font-size:12px;">
-                            <i class="fas fa-edit" style="color:var(--info); cursor:pointer; margin-right:8px;" onclick="window.editProduct('${c.key}')"></i>
-                            <i class="fas fa-trash" style="color:red; cursor:pointer;" onclick="window.del('products/${c.key}')"></i>
-                        </div>
-                    </div>
-                </div>`);
-            });
-            document.getElementById('d-stock-val').innerText = stockVal.toLocaleString();
-            document.getElementById('total-items').innerText = allProducts.length + " items";
-        });
-
-        onValue(ref(db, 'sales'), s => {
-            allSales = [];
-            let todaySale = 0, monthProfit = 0;
-            const todayStr = new Date().toISOString().split('T')[0];
-            const thisMonth = new Date().getMonth();
-            s.forEach(c => {
-                const sl = {key: c.key, ...c.val()};
-                allSales.push(sl);
-                const d = new Date(sl.time);
-                if(d.toISOString().split('T')[0] === todayStr) todaySale += sl.total;
-                if(d.getMonth() === thisMonth) monthProfit += sl.profit;
-            });
-            document.getElementById('d-sale').innerText = todaySale.toLocaleString();
-            document.getElementById('d-profit').innerText = monthProfit.toLocaleString();
-            window.generateReport();
-        });
-
-        onValue(ref(db, 'customers'), s => {
-            allCustomers = [];
-            let totalDue = 0;
-            s.forEach(c => {
-                const cust = {key: c.key, ...c.val()};
-                allCustomers.push(cust);
-                totalDue += (cust.totalDue || 0);
-            });
-            document.getElementById('d-due').innerText = totalDue.toLocaleString();
-            renderDueList();
-        });
-    }
-
-    // --- PRODUCT LOGIC ---
-    window.checkSerial = () => {
-        const code = document.getElementById('p-serial-in').value.trim();
-        const msg = document.getElementById('serial-msg');
-        if(!code) { msg.innerText = ""; return; }
-        const found = allProducts.find(p => p.serial == code);
-        if(found) {
-            msg.innerText = "পণ্য পাওয়া গেছে: " + found.name;
-            window.playSound('click'); // Found sound
-            fillForm(found);
-        } else { msg.innerText = "নতুন পণ্য যোগ হবে"; }
-    };
-
-    function fillForm(p) {
-        document.getElementById('p-name').value = p.name;
-        document.getElementById('p-buy').value = p.buyPrice;
-        document.getElementById('p-sell').value = p.sellPrice;
-        document.getElementById('p-cat').value = p.category || "General";
-    }
-
-    window.adjustStock = (key, delta) => {
-        const prod = allProducts.find(p => p.key === key);
-        if(prod && (prod.stock + delta) < 0) return showToast("স্টক ০ এর নিচে নামবে না!", "red");
-        window.playSound('click');
-        update(ref(db, 'products/' + key), { stock: increment(delta) }).then(()=>{
-            showToast(delta > 0 ? "স্টক বেড়েছে" : "স্টক কমেছে");
-        });
-    };
-
-    window.editProduct = (key) => {
-        window.playSound('click');
-        const p = allProducts.find(x => x.key === key);
-        if(!p) return;
-        document.getElementById('p-serial-in').value = p.serial;
-        fillForm(p);
-        document.getElementById('serial-msg').innerText = "এডিট মোড: " + p.name;
-        window.switchTab('add', document.querySelectorAll('.nav-item')[1]);
-    };
-
-    window.addCategory = () => {
-        const newCat = prompt("নতুন ক্যাটাগরি:");
-        if(newCat && !allCats.includes(newCat)) {
-            allCats.push(newCat);
-            set(ref(db, 'settings/categories'), allCats);
-        }
-    };
-    function updateCatDropdowns() {
-        const opts = allCats.map(c => `<option value="${c}">${c}</option>`).join('');
-        document.getElementById('p-cat').innerHTML = opts;
-        document.getElementById('filter-cat').innerHTML = '<option value="">সকল ক্যাটাগরি</option>' + opts;
-    }
-
-    window.saveProduct = () => {
-        const manualSerial = document.getElementById('p-serial-in').value.trim();
-        const name = document.getElementById('p-name').value.trim();
-        const cat = document.getElementById('p-cat').value;
-        const buy = parseFloat(document.getElementById('p-buy').value);
-        const sell = parseFloat(document.getElementById('p-sell').value);
-        const stock = parseInt(document.getElementById('p-stock').value) || 0;
-
-        if(!name || isNaN(buy) || isNaN(sell) || buy < 0 || sell < 0) return showToast("সঠিক তথ্য দিন!", "red");
-        const btn = document.getElementById('save-btn'); btn.disabled = true; btn.innerText = "Working...";
-
-        const successAction = () => {
-            showToast("পণ্য সেভ হয়েছে!"); 
-            window.playSound('success'); // Success sound
-            resetForm(btn);
+        // Magic Data
+        const magicData = {
+            "vivo_y20": { cat: "Vivo", name: "Vivo Y20 / Y12s Display", models: "Y20, Y20i, Y12s, Y15s, Y20G" },
+            "vivo_y91": { cat: "Vivo", name: "Vivo Y91 / Y93 / Y95 Display", models: "Y91, Y93, Y95, Y1s" },
+            "vivo_y11": { cat: "Vivo", name: "Vivo Y11 / Y15 / Y17 Display", models: "Y11, Y12, Y15, Y17" },
+            "oppo_a5s": { cat: "Oppo", name: "Oppo A5s / A12 / Realme 2", models: "A5s, A7, A12, Realme 2, C2" },
+            "oppo_a15": { cat: "Oppo", name: "Oppo A15 / A15s Display", models: "A15, A15s, A35" },
+            "realme_5": { cat: "Realme", name: "Realme 5 / 5i / C3 Display", models: "Realme 5, 5i, 6i, C3" },
+            "redmi_9a": { cat: "Xiaomi", name: "Redmi 9A / 9C Display", models: "Redmi 9A, 9C, 10A" },
+            "redmi_note8": { cat: "Xiaomi", name: "Redmi Note 8 Display", models: "Redmi Note 8" },
+            "poco_m3": { cat: "Xiaomi", name: "Poco M3 / Redmi 9T Display", models: "Poco M3, Redmi 9T, 9 Power" }
         };
 
-        if (manualSerial) {
-            const existingBySerial = allProducts.find(p => p.serial == manualSerial);
-            if (existingBySerial) {
-                update(ref(db, 'products/' + existingBySerial.key), { 
-                    stock: increment(stock), buyPrice: buy, sellPrice: sell, name: name, category: cat 
-                })
-                .then(successAction);
-                return;
+        function playSnd(type) {
+            const map = { 'click': 'sndClick', 'success': 'sndSuccess', 'error': 'sndError' };
+            const audio = document.getElementById(map[type]);
+            if(audio) { audio.currentTime = 0; audio.play().catch(e=>{}); }
+        }
+
+        if(sessionStorage.getItem("adminLogged")) showAdmin();
+
+        function checkPass() {
+            if(document.getElementById("passInput").value === "1234") {
+                sessionStorage.setItem("adminLogged", "true");
+                playSnd('success');
+                showAdmin();
+            } else { alert("Wrong Password!"); playSnd('error'); }
+        }
+        function showAdmin() { document.getElementById("loginScreen").style.display = "none"; document.getElementById("adminPanel").style.display = "block"; loadData(); }
+        function logout() { sessionStorage.removeItem("adminLogged"); location.reload(); }
+
+        function loadData() {
+            db.collection("displays").orderBy("createdAt", "desc").onSnapshot(snap => {
+                allData = [];
+                const list = document.getElementById("productList");
+                list.innerHTML = "";
+                snap.forEach(doc => {
+                    let d = doc.data();
+                    list.innerHTML += `
+                    <div class="product-item">
+                        <img src="${d.image || 'https://via.placeholder.com/50'}" class="p-img">
+                        <div class="p-info">
+                            <h4>${d.name}</h4>
+                            <div class="p-models">${d.models.join(', ')}</div>
+                            <div class="p-meta">${d.price}৳ | Stk: ${d.stock}</div>
+                        </div>
+                        <div class="actions">
+                            <button class="btn-edit" onclick="playSnd('click'); editMode('${doc.id}')"><i class="fas fa-pen"></i></button>
+                            <button class="btn-del" onclick="deleteItem('${doc.id}')"><i class="fas fa-trash"></i></button>
+                        </div>
+                    </div>`;
+                    allData.push({id: doc.id, ...d});
+                });
+                document.getElementById("totalCount").innerText = allData.length;
+            });
+        }
+
+        function getFormData() {
+            const name = document.getElementById("pName").value;
+            const price = document.getElementById("pPrice").value;
+            if(!name || !price) { alert("নাম ও দাম দিন!"); return null; }
+            return {
+                name, 
+                price: Number(price), 
+                stock: Number(document.getElementById("pStock").value), 
+                category: document.getElementById("pCategory").value,
+                image: document.getElementById("pImage").value,
+                models: document.getElementById("pModels").value.split(',').map(m => m.trim())
+            };
+        }
+
+        function saveData() {
+            const data = getFormData();
+            if(!data) return;
+            playSnd('click');
+            document.getElementById("saveBtn").innerText = "Saving...";
+            db.collection("displays").add({...data, createdAt: firebase.firestore.FieldValue.serverTimestamp()})
+              .then(() => { closeModal(); playSnd('success'); document.getElementById("saveBtn").innerText = "Save Product"; });
+        }
+
+        function editMode(id) {
+            const item = allData.find(d => d.id === id);
+            document.getElementById("editId").value = id;
+            document.getElementById("pName").value = item.name;
+            document.getElementById("pPrice").value = item.price;
+            document.getElementById("pStock").value = item.stock;
+            document.getElementById("pCategory").value = item.category;
+            document.getElementById("pModels").value = item.models.join(', ');
+            document.getElementById("pImage").value = item.image;
+            document.getElementById("saveBtn").style.display = "none";
+            document.getElementById("updateBtn").style.display = "block";
+            openModal();
+        }
+
+        function updateData() {
+            const id = document.getElementById("editId").value;
+            const data = getFormData();
+            if(!data) return;
+            db.collection("displays").doc(id).update(data).then(() => {
+                playSnd('success'); closeModal();
+            });
+        }
+
+        function deleteItem(id) {
+            playSnd('error'); 
+            if(confirm("নিশ্চিত ডিলিট করবেন?")) {
+                db.collection("displays").doc(id).delete();
+                playSnd('click');
+            }
+        }
+
+        function applyMagic() {
+            playSnd('click');
+            const val = document.getElementById("magicSelect").value;
+            if(magicData[val]) {
+                const d = magicData[val];
+                document.getElementById("pCategory").value = d.cat;
+                document.getElementById("pName").value = d.name;
+                document.getElementById("pModels").value = d.models;
             }
         }
         
-        if(manualSerial) {
-            push(ref(db, 'products'), { name, category: cat, buyPrice: buy, sellPrice: sell, stock, serial: manualSerial })
-            .then(successAction);
-        } else {
-            runTransaction(ref(db, 'productCounter'), (c) => (c || 0) + 1).then((r) => {
-                if (r.committed) {
-                    const serial = String(r.snapshot.val()).padStart(3, '0'); 
-                    push(ref(db, 'products'), { name, category: cat, buyPrice: buy, sellPrice: sell, stock, serial })
-                    .then(successAction);
-                } else { btn.disabled = false; btn.innerText = "সেভ করুন"; }
-            });
-        }
-    };
-
-    function resetForm(btn) {
-        document.getElementById('p-name').value = ""; document.getElementById('p-stock').value = "";
-        document.getElementById('p-buy').value = ""; document.getElementById('p-sell').value = "";
-        document.getElementById('p-serial-in').value = ""; document.getElementById('serial-msg').innerText = "";
-        btn.disabled = false; btn.innerText = "সেভ করুন";
-    }
-
-    // --- DUE & SALES ---
-    function renderDueList() {
-        const list = document.getElementById('due-list'); list.innerHTML = "";
-        allCustomers.forEach(c => {
-            if(c.totalDue > 0) {
-                list.insertAdjacentHTML('beforeend', `
-                <div class="item-row due-row" data-search="${c.name.toLowerCase()} ${c.phone}">
-                    <div><b>${c.name}</b><br><small>📱 ${c.phone}</small></div>
-                    <div style="text-align:right;">
-                        <span style="color:red; font-weight:bold;">বাকি: ৳${c.totalDue}</span><br>
-                        <div style="margin-top:5px;">
-                            <button class="btn-sm" style="background:var(--primary);" onclick="window.openDueModal('${c.key}')">টাকা নিন</button>
-                            <i class="fas fa-edit" style="color:#0984e3; cursor:pointer; margin-left:8px;" onclick="window.openEditCust('${c.key}')"></i>
-                        </div>
-                    </div>
-                </div>`);
+        function openModal(type) { 
+            document.getElementById("modalOverlay").style.display = "flex"; 
+            if(type==='add') {
+                document.getElementById("saveBtn").style.display = "block";
+                document.getElementById("updateBtn").style.display = "none";
+                document.querySelectorAll('input,textarea').forEach(i=>i.value='');
             }
-        });
-    }
-
-    window.openDueModal = (key) => {
-        window.playSound('click');
-        const cust = allCustomers.find(c => c.key === key);
-        selectedCustomerKey = key;
-        document.getElementById('dm-name').innerText = cust.name;
-        document.getElementById('dm-amount').innerText = cust.totalDue;
-        document.getElementById('dm-pay').value = "";
-        document.getElementById('due-modal').style.display = 'flex';
-    };
-
-    window.confirmDuePay = () => {
-        const pay = parseFloat(document.getElementById('dm-pay').value);
-        const cust = allCustomers.find(c => c.key === selectedCustomerKey);
-        if(isNaN(pay) || pay <= 0 || pay > cust.totalDue) return showToast("সঠিক পরিমাণ দিন!", "red");
-        
-        const updates = {};
-        updates['customers/'+selectedCustomerKey+'/totalDue'] = increment(-pay);
-        
-        const newSale = { 
-            customer: cust.name + ` (${cust.phone})`, 
-            items: "Due Payment", total: 0, profit: 0, paid: pay, due: 0, time: Date.now() 
-        };
-
-        update(ref(db), updates).then(() => {
-            push(ref(db, 'sales'), newSale);
-            window.playSound('success'); // Money sound
-            showToast("টাকা জমা হয়েছে!"); window.closeModal('due-modal');
-        });
-    };
-
-    // --- CUSTOMER EDIT / DELETE ---
-    window.openEditCust = (key) => {
-        window.playSound('click');
-        const cust = allCustomers.find(c => c.key === key);
-        selectedCustomerKey = key;
-        document.getElementById('ec-name').value = cust.name;
-        document.getElementById('ec-due').value = cust.totalDue;
-        document.getElementById('edit-cust-modal').style.display = 'flex';
-    };
-
-    window.saveCustUpdate = () => {
-        const name = document.getElementById('ec-name').value;
-        const due = parseFloat(document.getElementById('ec-due').value);
-        if(!name || isNaN(due) || due < 0) return showToast("ভুল তথ্য!", "red");
-        
-        update(ref(db, 'customers/'+selectedCustomerKey), { name: name, totalDue: due }).then(() => {
-            showToast("কাস্টমার আপডেট হয়েছে!");
-            window.closeModal('edit-cust-modal');
-        });
-    };
-
-    window.deleteCustomer = () => {
-        if(!confirm("কাস্টমার ডিলিট করলে তার সব হিসাব মুছে যাবে। আপনি কি নিশ্চিত?")) return;
-        remove(ref(db, 'customers/'+selectedCustomerKey)).then(() => {
-            window.playSound('trash'); // Trash sound
-            showToast("কাস্টমার ডিলিট হয়েছে!", "red");
-            window.closeModal('edit-cust-modal');
-        });
-    };
-
-    // --- SALE EDIT & RESTORE ---
-    window.openEditSale = (key) => {
-        window.playSound('click');
-        const sale = allSales.find(s => s.key === key);
-        if(!sale) return;
-        editingSaleKey = key;
-        originalSaleDue = sale.due || 0; 
-        document.getElementById('es-customer').value = sale.customer;
-        document.getElementById('es-items').value = sale.items;
-        document.getElementById('es-total').value = sale.total;
-        document.getElementById('es-profit').value = sale.profit;
-        document.getElementById('es-paid').value = sale.paid;
-        document.getElementById('es-due').value = sale.due;
-        document.getElementById('edit-sale-modal').style.display = 'flex';
-    };
-
-    window.calcEdit = () => {
-        const t = parseFloat(document.getElementById('es-total').value) || 0;
-        const p = parseFloat(document.getElementById('es-paid').value) || 0;
-        document.getElementById('es-due').value = (t - p) > 0 ? (t - p) : 0;
-    };
-
-    window.saveSaleUpdate = () => {
-        const newTotal = parseFloat(document.getElementById('es-total').value);
-        const newPaid = parseFloat(document.getElementById('es-paid').value);
-        const newDue = parseFloat(document.getElementById('es-due').value);
-        const newProfit = parseFloat(document.getElementById('es-profit').value);
-        
-        if(isNaN(newTotal) || isNaN(newPaid)) return showToast("সংখ্যা দিন!", "red");
-
-        const sale = allSales.find(s => s.key === editingSaleKey);
-        const custStr = sale.customer;
-        let phone = "";
-        const match = custStr.match(/\(([^)]+)\)/);
-        if (match) phone = match[1].replace(/[.#$[\]/]/g, ""); 
-
-        const updates = {};
-        updates['sales/' + editingSaleKey + '/total'] = newTotal;
-        updates['sales/' + editingSaleKey + '/paid'] = newPaid;
-        updates['sales/' + editingSaleKey + '/due'] = newDue;
-        updates['sales/' + editingSaleKey + '/profit'] = newProfit;
-        updates['sales/' + editingSaleKey + '/time'] = sale.time; 
-
-        const dueDiff = newDue - originalSaleDue;
-        if(phone && dueDiff !== 0) {
-             updates['customers/' + phone + '/totalDue'] = increment(dueDiff);
         }
-
-        update(ref(db), updates).then(() => {
-            window.playSound('success');
-            showToast("বিক্রি আপডেট হয়েছে!"); window.closeModal('edit-sale-modal');
-        }).catch(e => showToast(e.message, "red"));
-    };
-
-    window.deleteSale = () => {
-        if(!confirm("সতর্কতা: এটি ডিলিট করলে বিক্রিত পণ্য স্টকে ফেরত যাবে এবং কাস্টমারের বাকি কমে যাবে। আপনি কি নিশ্চিত?")) return;
-        
-        const sale = allSales.find(s => s.key === editingSaleKey);
-        const updates = {};
-        updates['sales/' + editingSaleKey] = null; 
-
-        if(sale.cartItems && Array.isArray(sale.cartItems)) {
-            sale.cartItems.forEach(item => {
-               updates['products/' + item.key + '/stock'] = increment(item.qty);
-            });
+        function closeModal() { document.getElementById("modalOverlay").style.display = "none"; playSnd('click'); }
+        function filterList() {
+            const txt = document.getElementById("adminSearch").value.toLowerCase();
+            document.querySelectorAll(".product-item").forEach(el => el.style.display = el.innerText.toLowerCase().includes(txt) ? "flex" : "none");
         }
-
-        if(sale.due > 0 && sale.customer.includes('(')) {
-             const match = sale.customer.match(/\(([^)]+)\)/);
-             if(match) {
-                 const phone = match[1].replace(/[.#$[\]/]/g, "");
-                 updates['customers/' + phone + '/totalDue'] = increment(-sale.due);
-             }
-        }
-
-        update(ref(db), updates).then(() => {
-            window.playSound('trash'); // Trash sound
-            showToast("মেমো ডিলিট হয়েছে এবং স্টক ফেরত গেছে!", "red"); 
-            window.closeModal('edit-sale-modal');
-        }).catch(e => showToast("Error: " + e.message, "red"));
-    };
-
-    // --- REPORTS ---
-    window.setReportMode = (m) => { window.playSound('click'); reportMode = m; window.generateReport(); };
-    window.generateReport = () => {
-        const dateInput = document.getElementById('report-date').valueAsDate;
-        if(!dateInput) return;
-        const list = document.getElementById('sales-list'); list.innerHTML = "";
-        let total = 0, profit = 0;
-        
-        const filtered = allSales.filter(s => {
-            const sDate = new Date(s.time);
-            if(reportMode === 'day') return sDate.toDateString() === dateInput.toDateString();
-            if(reportMode === 'month') return sDate.getMonth() === dateInput.getMonth() && sDate.getFullYear() === dateInput.getFullYear();
-            if(reportMode === 'year') return sDate.getFullYear() === dateInput.getFullYear();
-        }).reverse();
-
-        filtered.forEach(s => {
-            total += s.total; profit += s.profit;
-            list.insertAdjacentHTML('beforeend', `
-            <div class="item-row">
-                <div style="flex:1;">
-                    <b>${s.customer}</b><br>
-                    <small>${s.items.substring(0,30)}...</small>
-                </div>
-                <div style="text-align:right; margin-right:10px;">
-                    <b>৳${s.total}</b><br>
-                    <small style="color:${s.due>0?'red':'green'}">${s.due>0?'Due: '+s.due:'Paid'}</small>
-                </div>
-                <div>
-                    <i class="fas fa-edit" style="color:#0984e3; cursor:pointer; font-size:18px;" onclick="window.openEditSale('${s.key}')"></i>
-                </div>
-            </div>`);
-        });
-        document.getElementById('rep-total').innerText = total.toLocaleString();
-        document.getElementById('rep-profit').innerText = profit.toLocaleString();
-        document.getElementById('report-title').innerText = {day: "দৈনিক", month: "মাসিক", year: "বাৎসরিক"}[reportMode] + " হিসাব";
-    };
-
-    window.closeModal = (id) => { window.playSound('click'); document.getElementById(id).style.display = 'none'; }
-    window.filterAdminList = () => {
-        const txt = document.getElementById('admin-search').value.toLowerCase();
-        const cat = document.getElementById('filter-cat').value;
-        document.querySelectorAll('.p-row').forEach(r => {
-            r.style.display = (r.getAttribute('data-search').includes(txt) && (cat === "" || r.getAttribute('data-cat') === cat)) ? 'flex' : 'none';
-        });
-    };
-    window.filterDueList = () => {
-        const v = document.getElementById('due-search').value.toLowerCase();
-        document.querySelectorAll('.due-row').forEach(r => r.style.display = r.getAttribute('data-search').includes(v) ? 'flex' : 'none');
-    };
-    window.del = (path) => { 
-        if(confirm("Delete?")) {
-            window.playSound('trash');
-            remove(ref(db, path)); 
-        }
-    };
-    function showToast(msg, bg="#00b894") { 
-        if(bg === "red") window.playSound('error'); // Error sound
-        Toastify({ text: msg, backgroundColor: bg, duration: 2000, gravity: "bottom" }).showToast(); 
-    }
-</script>
+        function scrollToTop() { window.scrollTo(0,0); }
+    </script>
 </body>
 </html>
