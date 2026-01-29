@@ -1,606 +1,201 @@
-<!-- user_shop.html -->
 <!DOCTYPE html>
 <html lang="bn">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>POS User - With Sound</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Display Finder Zone</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
-
     <style>
-        :root { --bg: #f4f6f8; --card: #ffffff; --text: #2d3436; --primary: #6c5ce7; --accent: #00b894; --red: #d63031; --border: #eee; }
-        .dark-mode { --bg: #1e272e; --card: #2f3640; --text: #dcdde1; --primary: #8e44ad; --border: #353b48; }
-
-        body { margin: 0; font-family: 'Segoe UI', sans-serif; background: var(--bg); color: var(--text); user-select: none; display: flex; justify-content: center; overflow-x: hidden; transition: 0.3s; }
-        .shell { width: 100%; max-width: 480px; background: var(--bg); min-height: 100vh; position: relative; padding-bottom: 70px; overflow-x: hidden; }
-
-        /* AUTH */
-        #auth-screen { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: var(--bg); z-index: 999; display: flex; align-items: center; justify-content: center; }
-        .auth-box { width: 85%; max-width: 320px; background: var(--card); padding: 25px; border-radius: 12px; text-align: center; box-shadow: 0 5px 20px rgba(0,0,0,0.1); }
-        .inp { width: 100%; padding: 10px; margin: 6px 0; border-radius: 6px; border: 1px solid var(--border); background: var(--card); color: var(--text); box-sizing: border-box; font-size: 14px; outline: none; }
-        .btn { width: 100%; padding: 10px; margin: 6px 0; border-radius: 6px; border: none; background: var(--primary); color: white; font-weight: bold; cursor: pointer; font-size: 15px; box-sizing: border-box; transition:0.2s; }
+        @import url('https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@300;400;600;700&display=swap');
         
-        .header { background: var(--primary); padding: 12px 15px; color: white; display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; z-index: 50; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
+        :root { --primary: #007bff; --bg: #f4f7f6; --card-bg: #fff; }
+        body { font-family: 'Hind Siliguri', sans-serif; background: var(--bg); margin: 0; color: #333; -webkit-tap-highlight-color: transparent; }
 
-        /* SEARCH BAR */
-        .search-box { position: relative; margin: 10px 10px 5px 10px; }
-        .search-inp { width: 100%; padding: 10px 15px; padding-right: 35px; border-radius: 25px; border: 1px solid var(--primary); outline: none; font-size: 14px; box-sizing: border-box; background: var(--card); color: var(--text); }
+        header { background: linear-gradient(180deg, #007bff 0%, #0056b3 100%); padding: 30px 20px 60px; text-align: center; color: white; border-radius: 0 0 30px 30px; box-shadow: 0 4px 15px rgba(0,123,255,0.3); }
+        header h2 { margin: 0; font-size: 26px; }
         
-        #search-results { display: none; background: var(--card); margin: 0 10px; border-radius: 8px; max-height: 300px; overflow-y: auto; box-shadow: 0 8px 20px rgba(0,0,0,0.15); position: absolute; width: calc(100% - 20px); z-index: 100; border: 1px solid var(--border); }
-        .res-item { padding: 10px 15px; border-bottom: 1px solid var(--border); cursor: pointer; display: block; font-size: 14px; }
+        .search-container { margin: -30px auto 15px; padding: 0 20px; max-width: 600px; position: relative; z-index: 10; }
+        .search-box { display: flex; background: white; border-radius: 50px; box-shadow: 0 8px 20px rgba(0,0,0,0.1); padding: 5px; }
+        .search-box input { flex: 1; border: none; padding: 15px 20px; border-radius: 50px; outline: none; font-size: 16px; font-weight: 600; }
+        .search-box button { background: var(--primary); color: white; border: none; width: 50px; border-radius: 50%; font-size: 18px; cursor: pointer; }
 
-        /* CART DESIGN */
-        .cart-area { padding: 12px; background: var(--card); margin: 8px; border-radius: 8px; box-shadow: 0 1px 3px rgba(0,0,0,0.05); }
-        .cart-item { display: flex; justify-content: space-between; align-items: center; padding: 10px 0; border-bottom: 1px dashed var(--border); font-size: 13px; }
-        .qty-box { display: flex; align-items: center; gap: 5px; background: var(--bg); padding: 2px; border-radius: 4px; margin-top: 5px; }
-        .qty-btn { width: 22px; height: 22px; border: none; background: var(--card); border-radius: 3px; cursor: pointer; font-weight: bold; color: var(--primary); display: flex; align-items: center; justify-content: center; }
+        .cat-scroll { display: flex; gap: 10px; overflow-x: auto; padding: 5px 20px 15px; scrollbar-width: none; }
+        .cat-btn { background: white; border: 1px solid #ddd; padding: 8px 18px; border-radius: 20px; white-space: nowrap; font-weight: 600; color: #555; transition: 0.3s; cursor: pointer; }
+        .cat-btn.active { background: var(--primary); color: white; border-color: var(--primary); box-shadow: 0 4px 10px rgba(0,123,255,0.3); }
+
+        .container { max-width: 1000px; margin: 0 auto; padding: 10px 15px 80px; }
+        .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 15px; }
+
+        .card { 
+            background: white; border-radius: 15px; overflow: hidden; 
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05); border: 1px solid #eee;
+            transition: 0.3s; cursor: pointer; display: flex; flex-direction: column;
+        }
+        .card:active { transform: scale(0.98); }
+
+        .card-img { height: 140px; padding: 15px; display: flex; align-items: center; justify-content: center; position: relative; background: #fff; }
+        .card-img img { width: 100%; height: 100%; object-fit: contain; }
         
-        .cart-totals { margin-top: 10px; background: var(--bg); padding: 10px; border-radius: 8px; color: var(--text); font-size: 14px; border: 1px solid var(--border); }
-        .bill-inp { width: 80px; padding: 4px; text-align: right; border-radius: 4px; border: 1px solid #b2bec3; font-weight: bold; font-size: 14px; background: var(--card); color: var(--text); }
+        .price-badge { position: absolute; bottom: 5px; right: 5px; background: #e74c3c; color: white; font-weight: bold; padding: 3px 10px; border-radius: 12px; font-size: 13px; }
+        .stock-badge { position: absolute; top: 10px; left: 10px; background: rgba(46, 204, 113, 0.15); color: #27ae60; font-size: 11px; padding: 4px 8px; border-radius: 8px; font-weight: 700; }
 
-        .view-section { display: none; }
+        .card-body { padding: 12px; display: flex; flex-direction: column; flex-grow: 1; }
+        .card-title { 
+            font-size: 15px; font-weight: 700; margin: 0 0 8px; color: #2c3e50; 
+            display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; height: 42px;
+        }
+
+        .model-box { 
+            background: #f1f3f5; padding: 8px; border-radius: 8px; 
+            font-size: 12px; color: #333; font-weight: 700; 
+            margin-bottom: 10px; border: 1px solid #e9ecef;
+            display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; line-height: 1.5; height: 38px;
+        }
+
+        .btn-wa { margin-top: auto; background: #25D366; color: white; text-align: center; padding: 10px; border-radius: 10px; text-decoration: none; font-weight: bold; font-size: 14px; display: flex; align-items: center; justify-content: center; gap: 6px; }
         
-        /* BOTTOM NAV */
-        .bottom-nav { position: fixed; bottom: 0; width: 100%; max-width: 480px; background: var(--card); display: flex; padding: 8px 0; box-shadow: 0 -2px 10px rgba(0,0,0,0.03); z-index: 40; border-top: 1px solid var(--border); }
-        .nav-item { flex: 1; text-align: center; color: #b2bec3; cursor: pointer; padding: 4px; font-size: 12px; }
-        .nav-item.active { color: var(--primary); font-weight: bold; }
-        .nav-item i { font-size: 18px; display: block; margin-bottom: 2px; }
-
-        .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); align-items: center; justify-content: center; z-index: 200; backdrop-filter: blur(2px); }
-        .modal-box { background: var(--card); padding: 20px; border-radius: 12px; width: 85%; max-width: 320px; color: var(--text); max-height: 80vh; overflow-y: auto; }
+        .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); z-index: 2000; display: none; justify-content: center; align-items: center; backdrop-filter: blur(5px); }
+        .modal-box { background: white; width: 85%; max-width: 400px; border-radius: 20px; padding: 25px; position: relative; animation: popUp 0.3s ease; }
+        @keyframes popUp { from { transform: scale(0.8); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+        
+        .full-models { 
+            background: #f8f9fa; padding: 12px; border-radius: 10px; 
+            border: 1px solid #dee2e6; color: #333; font-weight: 600; 
+            line-height: 1.6; font-size: 14px; max-height: 200px; overflow-y: auto;
+        }
     </style>
 </head>
 <body>
 
-<div class="shell">
-    <div id="auth-screen">
-        <div class="auth-box">
-            <h3 style="color:var(--primary); margin-top:0;">POS Login</h3>
-            <input type="email" id="email" class="inp" placeholder="Email">
-            <input type="password" id="pass" class="inp" placeholder="Password">
-            <button class="btn" id="login-btn">Login</button>
+    <header>
+        <h2>Display Zone</h2>
+    </header>
+
+    <div class="search-container">
+        <div class="search-box">
+            <input type="text" id="searchInput" placeholder="মডেল খুঁজুন..." onkeyup="handleSearch()">
+            <button onclick="playTap()"><i class="fas fa-search"></i></button>
         </div>
     </div>
 
-    <div id="app-content" style="display:none;">
-        <div class="header">
-            <span style="font-size:16px; font-weight:bold;"><i class="fas fa-shopping-bag"></i> Counter POS</span>
-            <div>
-                <i class="fas fa-moon" onclick="window.toggleTheme()" style="cursor:pointer; font-size:18px; margin-right: 15px;"></i>
-                <i class="fas fa-sign-out-alt" onclick="window.logout()" style="cursor:pointer; font-size:18px;"></i>
-            </div>
-        </div>
+    <div class="cat-scroll">
+        <button class="cat-btn active" onclick="filterCat('All', this)">All</button>
+        <button class="cat-btn" onclick="filterCat('Samsung', this)">Samsung</button>
+        <button class="cat-btn" onclick="filterCat('Xiaomi', this)">Xiaomi</button>
+        <button class="cat-btn" onclick="filterCat('Vivo', this)">Vivo</button>
+        <button class="cat-btn" onclick="filterCat('Oppo', this)">Oppo</button>
+        <button class="cat-btn" onclick="filterCat('Realme', this)">Realme</button>
+        <button class="cat-btn" onclick="filterCat('Infinix', this)">Infinix</button>
+        <button class="cat-btn" onclick="filterCat('Tecno', this)">Tecno</button>
+    </div>
 
-        <!-- TAB 1: SELL -->
-        <div id="view-sell" class="view-section" style="display:block;">
-            <div class="search-box">
-                <input type="text" id="p-search" class="search-inp" placeholder="পণ্য খুঁজুন (নাম বা কোড)..." onkeyup="window.searchProduct()" autocomplete="off">
-                <i class="fas fa-barcode" style="position:absolute; right:12px; top:11px; color:var(--primary);"></i>
-            </div>
-            <div id="search-results"></div>
-
-            <div class="cart-area">
-                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px; border-bottom:1px solid var(--border); padding-bottom:5px;">
-                    <h5 style="margin:0; color:var(--primary);">Cart / বিল সেকশন</h5>
-                    <button onclick="window.clearCart()" style="background:none; border:none; color:var(--red); cursor:pointer;"><i class="fas fa-trash-alt"></i> Clear</button>
-                </div>
-                
-                <div id="cart-list" style="min-height:50px;">
-                    <div style="text-align:center; color:#b2bec3; margin-top:10px;">কার্ট খালি</div>
-                </div>
-                
-                <div class="cart-totals">
-                    <div style="display:flex; justify-content:space-between; margin-bottom:5px;">
-                        <span>মোট বিল:</span> <span style="font-weight:bold;">৳<span id="bill-total">0</span></span>
-                    </div>
-                    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:5px;">
-                        <span>ডিসকাউন্ট:</span> 
-                        <input type="number" id="bill-disc" class="bill-inp" placeholder="0" oninput="window.updateBill()" min="0">
-                    </div>
-                    <div style="display:flex; justify-content:space-between; align-items:center;">
-                        <span>জমা (Paid):</span> 
-                        <input type="number" id="bill-paid" class="bill-inp" placeholder="0" oninput="window.updateBill()" min="0">
-                    </div>
-                    <hr style="margin:8px 0; border:0; border-top:1px dashed #b2bec3;">
-                    <div style="display:flex; justify-content:space-between; color:var(--red); font-weight:bold;">
-                        <span>বাকি (Due):</span> <span>৳<span id="bill-due">0</span></span>
-                    </div>
-                </div>
-
-                <div style="margin-top:10px;">
-                    <input type="text" id="cust-name" class="inp" placeholder="কাস্টমারের নাম">
-                    <input type="number" id="cust-phone" class="inp" placeholder="মোবাইল নম্বর (বাকি থাকলে দিন)">
-                </div>
-                
-                <button id="sale-btn" class="btn" style="background:var(--accent); margin-top:10px;" onclick="window.processSale()">
-                    বিক্রি সম্পন্ন করুন
-                </button>
-            </div>
-        </div>
-
-        <!-- TAB 2: STOCK -->
-        <div id="view-stock" class="view-section">
-            <div style="padding:10px;"><input type="text" id="stk-find" class="inp" placeholder="🔍 স্টক লিস্টে খুঁজুন..." onkeyup="window.filterStock()"></div>
-            <div id="stock-list" style="padding-bottom:10px;"></div>
-        </div>
-
-        <!-- TAB 3: HISTORY -->
-        <div id="view-history" class="view-section">
-            <!-- Global Due Stat -->
-            <div style="background:var(--card); color:var(--red); padding:10px; margin:10px; border-radius:8px; display:flex; justify-content:space-between; font-size:14px; border:1px solid var(--red);">
-                <span>মার্কেট ডিউ (Total Due)</span>
-                <span style="font-weight:bold;">৳<span id="market-due">0</span></span>
-            </div>
-
-            <!-- Date Selector -->
-            <div style="padding:0 10px; margin-bottom:10px;">
-                <label style="font-size:12px; color:#636e72;">তারিখ নির্বাচন করুন:</label>
-                <input type="date" id="history-date" class="inp" style="text-align:center; font-weight:bold;" onchange="window.loadHistoryByDate()">
-            </div>
-
-            <!-- Daily Summary Stats -->
-            <div style="display:flex; gap:10px; padding:0 10px; margin-bottom:10px;">
-                <div style="flex:1; background:var(--accent); color:white; padding:10px; border-radius:8px; text-align:center;">
-                    <small>আজকের বিক্রি</small><br>
-                    <strong style="font-size:18px;">৳<span id="day-sale-total">0</span></strong>
-                </div>
-                <div style="flex:1; background:#fab1a0; color:#d63031; padding:10px; border-radius:8px; text-align:center;">
-                    <small>আজকের বাকি</small><br>
-                    <strong style="font-size:18px;">৳<span id="day-due-total">0</span></strong>
-                </div>
-            </div>
-
-            <h5 style="margin:10px 15px; color:#636e72; border-bottom:1px solid var(--border); padding-bottom:5px;">বিক্রয় তালিকা</h5>
-            <div id="history-list" style="padding-bottom:10px;">
-                <div style="text-align:center; padding:20px; color:#b2bec3;">লোডিং...</div>
-            </div>
-        </div>
-
-        <div class="bottom-nav">
-            <div class="nav-item active" onclick="window.switchTab('sell', this)"><i class="fas fa-cash-register"></i>Sell</div>
-            <div class="nav-item" onclick="window.switchTab('stock', this)"><i class="fas fa-boxes"></i>Stock</div>
-            <div class="nav-item" onclick="window.switchTab('history', this)"><i class="fas fa-calendar-alt"></i>History</div>
+    <div class="container">
+        <div class="grid" id="productList">
+            <p style="grid-column:1/-1; text-align:center;">লোড হচ্ছে...</p>
         </div>
     </div>
-</div>
 
-<div id="success-modal" class="modal">
-    <div class="modal-box" style="text-align:center;">
-        <i class="fas fa-check-circle" style="font-size:40px; color:#00b894; margin-bottom:10px;"></i>
-        <h3>বিক্রি সফল!</h3>
-        <button class="btn" onclick="window.printLastInvoice()">🖨️ মেমো প্রিন্ট করুন</button>
-        <button class="btn" style="background:#636e72; margin-top:8px;" onclick="window.closeModal('success-modal')">বন্ধ করুন</button>
-    </div>
-</div>
-
-<div id="view-modal" class="modal">
-    <div class="modal-box">
-        <div style="display:flex; justify-content:space-between; align-items:center;">
-            <h3 style="margin:0;">মেমো ডিটেইলস</h3>
-            <span onclick="window.closeModal('view-modal')" style="font-size:24px; cursor:pointer;">&times;</span>
+    <!-- Product Details Modal -->
+    <div class="modal-overlay" id="detailModal">
+        <div class="modal-box">
+            <button onclick="closeModal()" style="position:absolute; right:15px; top:15px; border:none; background:none; font-size:24px; color:#888;">&times;</button>
+            <img id="mImg" src="" style="width:100%; height:150px; object-fit:contain; margin-bottom:10px;">
+            <h3 id="mTitle" style="margin:0 0 10px; color:#007bff;">Title</h3>
+            <p style="font-weight:bold; color:#e74c3c; margin:5px 0;">দাম: <span id="mPrice"></span></p>
+            <p style="font-size:14px; margin-bottom:5px;">সাপোর্টেড মডেল:</p>
+            <div id="mModels" class="full-models"></div>
+            <a id="mBtn" href="#" class="btn-wa" onclick="playTap()" style="margin-top:15px;">অর্ডার করুন</a>
         </div>
-        <hr>
-        <div id="view-modal-content" style="font-size:14px; line-height:1.6;"></div>
-        <button class="btn" style="background:#b2bec3; margin-top:15px;" onclick="window.closeModal('view-modal')">বন্ধ করুন</button>
     </div>
-</div>
 
-<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
-<script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js";
-    import { getAuth, signInWithEmailAndPassword, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js";
-    import { getDatabase, ref, onValue, update, push, query, startAt, endAt, get, child, orderByChild, increment } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-database.js";
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
 
-    const firebaseConfig = {
-        apiKey: "AIzaSyCFnFbLhLN3mAUrmcjFkcb9DpBp5EPmKnQ",
-        authDomain: "heke-452d6.firebaseapp.com",
-        databaseURL: "https://heke-452d6-default-rtdb.firebaseio.com",
-        projectId: "heke-452d6",
-        storageBucket: "heke-452d6.firebasestorage.app",
-        messagingSenderId: "33927182418",
-        appId: "1:33927182418:web:b51257c4476b330739478b",
-        measurementId: "G-C4GQPTEYK4"
-    };
-
-    const app = initializeApp(firebaseConfig);
-    const auth = getAuth(app);
-    const db = getDatabase(app);
-
-    // --- SOUND MANAGER ---
-    const sounds = {
-        success: new Audio('https://cdn.pixabay.com/download/audio/2021/08/04/audio_0625c1539c.mp3'), // Cash register
-        error: new Audio('https://cdn.pixabay.com/download/audio/2021/08/04/audio_c6ccf3232f.mp3'),   // Error beep
-        click: new Audio('https://cdn.pixabay.com/download/audio/2022/03/15/audio_73d22e0322.mp3'),   // Soft pop
-        trash: new Audio('https://cdn.pixabay.com/download/audio/2022/03/10/audio_c8c8a73467.mp3')    // Delete swoosh
-    };
-
-    window.playSound = (type) => {
-        if(sounds[type]) {
-            sounds[type].currentTime = 0;
-            sounds[type].play().catch(e => console.log("Sound error:", e));
-        }
-    };
-
-    let allProducts = [], cart = [], lastSaleData = null;
-    let allSalesHistory = [];
-
-    // Theme Logic
-    const savedTheme = localStorage.getItem('theme');
-    if (savedTheme === 'dark') document.body.classList.add('dark-mode');
-
-    window.toggleTheme = () => {
-        window.playSound('click');
-        document.body.classList.toggle('dark-mode');
-        localStorage.setItem('theme', document.body.classList.contains('dark-mode') ? 'dark' : 'light');
-    };
-
-    // Auth Logic
-    onAuthStateChanged(auth, u => {
-        if(u) {
-            document.getElementById('auth-screen').style.display='none';
-            document.getElementById('app-content').style.display='block';
-            document.getElementById('history-date').valueAsDate = new Date();
-            loadData();
-            window.loadHistoryByDate(); 
-        } else {
-            document.getElementById('auth-screen').style.display='flex';
-        }
-    });
-
-    document.getElementById('login-btn').addEventListener('click', () => {
-        window.playSound('click');
-        signInWithEmailAndPassword(auth, document.getElementById('email').value, document.getElementById('pass').value)
-        .catch(e => showToast(e.message, "red"));
-    });
-
-    window.logout = () => { window.playSound('click'); signOut(auth); };
-
-    // Data Loading
-    function loadData() {
-        onValue(ref(db, 'products'), s => {
-            allProducts = [];
-            const list = document.getElementById('stock-list');
-            list.innerHTML = "";
-            s.forEach(c => {
-                const p = c.val();
-                const serial = p.serial || '--';
-                allProducts.push({key: c.key, ...p, serial});
-                list.insertAdjacentHTML('beforeend', `
-                    <div class="list-row p-row" style="background:var(--card); padding:10px; margin:8px 10px; border-radius:8px; display:flex; justify-content:space-between; box-shadow:0 1px 3px rgba(0,0,0,0.05); font-size:14px; border:1px solid var(--border);" data-search="${p.name.toLowerCase()} ${serial}">
-                        <div><b>${p.name}</b> <span style="background:#b2bec3; color:white; padding:1px 5px; border-radius:3px; font-size:11px;">${serial}</span><br><small>৳${p.sellPrice}</small></div>
-                        <div style="background:var(--bg); padding:2px 8px; border-radius:4px; font-weight:bold; font-size:13px; display:flex; align-items:center;">${p.stock}</div>
-                    </div>
-                `);
-            });
-        });
-
-        onValue(ref(db, 'customers'), s => {
-            let total = 0;
-            s.forEach(c => total += (c.val().totalDue || 0));
-            document.getElementById('market-due').innerText = total;
-        });
-    }
-
-    // --- NEW HISTORY LOGIC ---
-    window.loadHistoryByDate = () => {
-        const dateVal = document.getElementById('history-date').value;
-        if(!dateVal) return;
-        const startOfDay = new Date(dateVal); startOfDay.setHours(0,0,0,0);
-        const endOfDay = new Date(dateVal); endOfDay.setHours(23,59,59,999);
-
-        const q = query(ref(db, 'sales'), orderByChild('time'), startAt(startOfDay.getTime()), endAt(endOfDay.getTime()));
-
-        onValue(q, (snapshot) => {
-            const hList = document.getElementById('history-list');
-            hList.innerHTML = "";
-            let dayTotal = 0, dayDue = 0, items = [];
-
-            if(!snapshot.exists()) {
-                hList.innerHTML = `<div style="text-align:center; padding:20px; color:#b2bec3;">এই তারিখে কোনো বিক্রি নেই</div>`;
-                document.getElementById('day-sale-total').innerText = "0";
-                document.getElementById('day-due-total').innerText = "0";
-                allSalesHistory = [];
-                return;
-            }
-
-            snapshot.forEach(c => {
-                const s = {key: c.key, ...c.val()};
-                items.push(s);
-                dayTotal += (s.total || 0); dayDue += (s.due || 0);
-            });
-
-            items.sort((a, b) => b.time - a.time);
-            allSalesHistory = items;
-            document.getElementById('day-sale-total').innerText = dayTotal;
-            document.getElementById('day-due-total').innerText = dayDue;
-
-            items.forEach(sl => {
-                const displayTime = new Date(sl.time).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
-                hList.insertAdjacentHTML('beforeend', `
-                    <div style="background:var(--card); padding:10px 15px; margin:8px 10px; border-radius:8px; display:flex; justify-content:space-between; align-items:center; box-shadow:0 1px 3px rgba(0,0,0,0.05); font-size:13px; border:1px solid var(--border);">
-                        <div>
-                            <b>${sl.customer}</b><br>
-                            <span style="font-size:11px; color:#636e72;">বিল: ৳${sl.total} • ${sl.due > 0 ? `<span style='color:red;'>বাকি: ${sl.due}</span>` : `<span style='color:green;'>পরিশোধ</span>`}</span>
-                        </div>
-                        <div style="text-align:right;">
-                            <small style="color:#636e72; display:block; margin-bottom:5px;">${displayTime}</small>
-                            <button onclick="window.viewSale('${sl.key}')" style="background:var(--primary); color:white; border:none; padding:4px 8px; border-radius:4px; cursor:pointer;"><i class="fas fa-eye"></i> View</button>
-                        </div>
-                    </div>
-                `);
-            });
-        });
-    };
-
-    // --- CART & SALES ---
-    window.searchProduct = () => {
-        const txt = document.getElementById('p-search').value.toLowerCase();
-        const resBox = document.getElementById('search-results');
-        resBox.innerHTML = "";
-        
-        if(txt.length < 1) { resBox.style.display='none'; return; }
-        const hits = allProducts.filter(p => p.name.toLowerCase().includes(txt) || (p.serial && p.serial.toString().includes(txt)));
-        
-        if(hits.length > 0) {
-            resBox.style.display='block';
-            hits.forEach(p => {
-                const div = document.createElement('div');
-                div.className = 'res-item';
-                div.innerHTML = `
-                    <div style="font-weight:bold;">${p.name} <small>(${p.serial})</small></div>
-                    <div style="font-size:12px; margin-top:3px;">
-                        <span style="background:#fff3cd; color:#d63031; padding:1px 5px; border-radius:3px;">৳${p.sellPrice}</span>
-                        <span style="background:#636e72; color:white; padding:1px 5px; border-radius:3px; margin-left:5px;">মজুদ: ${p.stock}</span>
-                    </div>
-                `;
-                div.onclick = () => window.addToCart(p);
-                resBox.appendChild(div);
-            });
-        } else { resBox.style.display='none'; }
-    };
-
-    window.addToCart = (p) => {
-        window.playSound('click'); // Sound
-        document.getElementById('search-results').style.display='none';
-        document.getElementById('p-search').value = "";
-        
-        if(p.stock < 1) return showToast("স্টক শেষ!", "red");
-        
-        const existIdx = cart.findIndex(i => i.key === p.key);
-        if(existIdx > -1) {
-            window.changeQty(existIdx, 1);
-        } else {
-            cart.push({ key: p.key, name: p.name, price: p.sellPrice, buy: p.buyPrice, qty: 1 });
-            window.renderCart();
-        }
-    };
-
-    window.changeQty = (idx, delta) => {
-        if(delta !== -999) window.playSound('click'); // Sound
-        const item = cart[idx];
-        const newQty = item.qty + delta;
-        
-        const liveProduct = allProducts.find(p => p.key === item.key);
-        const limit = liveProduct ? liveProduct.stock : 999;
-
-        if (newQty > limit) return showToast("স্টক লিমিট শেষ!", "red");
-        
-        if (newQty <= 0) {
-            if(confirm("রিমুভ করবেন?")) {
-                cart.splice(idx, 1);
-                window.playSound('trash'); // Sound
-            }
-        } else {
-            item.qty = newQty;
-        }
-        window.renderCart();
-    };
-
-    window.renderCart = () => {
-        const cList = document.getElementById('cart-list');
-        cList.innerHTML = "";
-        
-        if(cart.length === 0) {
-            cList.innerHTML = `<div style="text-align:center; padding:15px; color:#b2bec3; font-size:13px;">কার্ট খালি</div>`;
-            window.calculateTotals();
-            return;
-        }
-
-        cart.forEach((item, idx) => {
-            cList.insertAdjacentHTML('beforeend', `
-                <div class="cart-item">
-                    <div style="flex:1;">
-                        <div style="font-weight:bold;">${item.name}</div>
-                        <div style="font-size:11px; margin-top:2px;">৳${item.price} x ${item.qty}</div>
-                    </div>
-                    <div style="display:flex; align-items:center; gap:10px;">
-                        <div style="font-weight:bold; color:var(--primary);">৳${item.price * item.qty}</div>
-                        <div class="qty-box">
-                            <button class="qty-btn" onclick="window.changeQty(${idx}, -1)">-</button>
-                            <span style="font-weight:bold; width:18px; text-align:center; font-size:12px;">${item.qty}</span>
-                            <button class="qty-btn" onclick="window.changeQty(${idx}, 1)">+</button>
-                        </div>
-                    </div>
-                </div>
-            `);
-        });
-        window.calculateTotals();
-    };
-
-    window.clearCart = () => { 
-        if(cart.length > 0) window.playSound('trash');
-        cart = []; window.renderCart(); 
-    };
-
-    window.calculateTotals = () => {
-        let total = 0;
-        cart.forEach(i => total += (i.price * i.qty));
-        document.getElementById('bill-total').innerText = total;
-        window.updateBill();
-    };
-
-    window.updateBill = () => {
-        const total = parseFloat(document.getElementById('bill-total').innerText) || 0;
-        const disc = parseFloat(document.getElementById('bill-disc').value) || 0;
-        const paid = parseFloat(document.getElementById('bill-paid').value) || 0;
-        const netTotal = total - disc;
-        const due = netTotal - paid;
-        document.getElementById('bill-due').innerText = due > 0 ? due : 0;
-    };
-
-    window.processSale = () => {
-        if(cart.length === 0) return showToast("কার্ট খালি!", "red");
-        
-        const btn = document.getElementById('sale-btn');
-        btn.disabled = true; btn.innerText = "Processing...";
-
-        const total = parseFloat(document.getElementById('bill-total').innerText);
-        const disc = parseFloat(document.getElementById('bill-disc').value) || 0;
-        const paid = parseFloat(document.getElementById('bill-paid').value) || 0;
-        const finalTotal = total - disc;
-        const due = finalTotal - paid;
-        
-        const custName = document.getElementById('cust-name').value.trim() || "Guest";
-        let custPhone = document.getElementById('cust-phone').value.trim();
-        custPhone = custPhone.replace(/[.#$[\]/]/g, "");
-
-        if(due > 0 && !custPhone) {
-            btn.disabled = false; btn.innerText = "বিক্রি সম্পন্ন করুন";
-            return showToast("বাকি থাকলে মোবাইল নম্বর বাধ্যতামূলক!", "red");
-        }
-
-        let totalProfit = 0;
-        let summary = "";
-        const updates = {};
-        
-        cart.forEach(i => {
-            totalProfit += ((i.price - i.buy) * i.qty);
-            summary += `${i.name}(${i.qty}), `;
-            updates['products/' + i.key + '/stock'] = increment(-i.qty); 
-        });
-        totalProfit -= disc;
-
-        const saleData = {
-            items: summary.slice(0, -2),
-            cartItems: cart,
-            total: finalTotal,
-            profit: totalProfit,
-            paid: paid,
-            due: due > 0 ? due : 0,
-            customer: custName + (custPhone ? ` (${custPhone})` : ""),
-            time: Date.now()
+    <script>
+        const firebaseConfig = {
+          apiKey: "AIzaSyB6T58YzpxyZsY_jnnHXhU__YYi0-fuENA",
+          authDomain: "soping-8b0b1.firebaseapp.com",
+          databaseURL: "https://soping-8b0b1-default-rtdb.firebaseio.com",
+          projectId: "soping-8b0b1",
+          storageBucket: "soping-8b0b1.firebasestorage.app",
+          messagingSenderId: "516440071124",
+          appId: "1:516440071124:web:149502c15abe71c41b9441",
+          measurementId: "G-1SC6C3Q8SS"
         };
 
-        const onComplete = () => {
-            push(ref(db, 'sales'), saleData);
-            window.playSound('success'); // Success Sound!
-            lastSaleData = saleData;
-            window.clearCart();
-            document.getElementById('bill-disc').value = "";
-            document.getElementById('bill-paid').value = "";
-            document.getElementById('cust-name').value = "";
-            document.getElementById('cust-phone').value = "";
-            document.getElementById('success-modal').style.display='flex';
-            btn.disabled = false; btn.innerText = "বিক্রি সম্পন্ন করুন";
-        };
+        firebase.initializeApp(firebaseConfig);
+        const db = firebase.firestore();
+        let allData = [];
 
-        if (custPhone) {
-            const custRef = `customers/${custPhone}`;
-            get(child(ref(db), custRef)).then((snapshot) => {
-                let currentDue = 0;
-                if (snapshot.exists()) currentDue = snapshot.val().totalDue || 0;
-                updates[custRef] = {
-                    name: custName,
-                    phone: custPhone,
-                    totalDue: currentDue + (due > 0 ? due : 0),
-                    lastSale: Date.now()
-                };
-                update(ref(db), updates).then(onComplete).catch(e => {
-                    showToast("Error: " + e.message, "red");
-                    btn.disabled = false;
-                });
-            });
-        } else {
-            update(ref(db), updates).then(onComplete).catch(e => {
-                showToast("Error: " + e.message, "red");
-                btn.disabled = false;
+        // Sounds
+        const tapSound = new Audio("data:audio/wav;base64,UklGRi4AAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YQAAAAA="); // Placeholder empty, replaced by logic
+        // Simple Pop Sound (Base64 for efficiency)
+        const popAudio = new Audio("https://cdn.pixabay.com/download/audio/2022/03/24/audio_c8b84606f6.mp3?filename=pop-39222.mp3"); // Short POP sound
+        
+        function playTap() {
+            popAudio.currentTime = 0;
+            popAudio.play().catch(e=>{});
+        }
+
+        db.collection("displays").orderBy("createdAt", "desc").onSnapshot(snap => {
+            allData = [];
+            snap.forEach(doc => allData.push({id: doc.id, ...doc.data()}));
+            render(allData);
+        });
+
+        function render(list) {
+            const el = document.getElementById("productList");
+            el.innerHTML = "";
+            if(!list.length) { el.innerHTML = "<p style='text-align:center;width:100%'>কোনো পণ্য নেই</p>"; return; }
+
+            list.forEach(p => {
+                const img = p.image || "https://via.placeholder.com/150";
+                // FIX: Escape both quotes safely
+                const safeData = JSON.stringify(p).replace(/"/g, '&quot;').replace(/'/g, "&#39;");
+                
+                el.innerHTML += `
+                <div class="card" onclick='openModal(${safeData})'>
+                    <div class="card-img">
+                        <span class="stock-badge">Stock: ${p.stock}</span>
+                        <img src="${img}" loading="lazy">
+                        <span class="price-badge">${p.price} ৳</span>
+                    </div>
+                    <div class="card-body">
+                        <h3 class="card-title">${p.name}</h3>
+                        <div class="model-box">${p.models.join(', ')}</div>
+                        <div class="btn-wa"><i class="fab fa-whatsapp"></i> বিস্তারিত দেখুন</div>
+                    </div>
+                </div>`;
             });
         }
-    };
 
-    window.printLastInvoice = () => {
-        window.playSound('click');
-        if(!lastSaleData) return;
-        const s = lastSaleData;
-        const win = window.open('', '', 'width=300,height=500');
-        win.document.write(`
-            <html>
-            <body style="font-family:monospace; font-size:12px; text-align:center; padding:5px;">
-                <h3>Money Receipt</h3>
-                <p>${new Date(s.time).toLocaleString()}</p>
-                <hr style="border-top:1px dashed #000;">
-                <div style="text-align:left;">
-                    ${s.cartItems.map(i => `
-                        <div style="display:flex; justify-content:space-between;">
-                            <span>${i.name} x${i.qty}</span>
-                            <span>${i.price*i.qty}</span>
-                        </div>`).join('')}
-                </div>
-                <hr style="border-top:1px dashed #000;">
-                <div style="text-align:right;">
-                    <b>Total: ${s.total}</b><br>
-                    Paid: ${s.paid}<br>
-                    Due: ${s.due}
-                </div>
-                <hr>
-                <p>Customer: ${s.customer}</p>
-                <p>Thank You!</p>
-                <script>window.print(); setTimeout(()=>window.close(), 1000);<\/script>
-            </body>
-            </html>
-        `);
-        win.document.close();
-    };
+        function openModal(data) {
+            playTap();
+            document.getElementById("mImg").src = data.image || "";
+            document.getElementById("mTitle").innerText = data.name;
+            document.getElementById("mPrice").innerText = data.price + " ৳";
+            document.getElementById("mModels").innerText = data.models.join(', ');
+            document.getElementById("mBtn").href = `https://wa.me/+8801690191751?text=Order: ${data.name}`;
+            document.getElementById("detailModal").style.display = "flex";
+        }
 
-    window.viewSale = (key) => {
-        window.playSound('click');
-        const sale = allSalesHistory.find(s => s.key === key);
-        if(!sale) return;
-        
-        const content = document.getElementById('view-modal-content');
-        content.innerHTML = `
-            <p><b>তারিখ:</b> ${new Date(sale.time).toLocaleString()}</p>
-            <p><b>কাস্টমার:</b> ${sale.customer}</p>
-            <div style="background:var(--bg); padding:10px; border-radius:5px; margin:10px 0;">
-                <b>পণ্য তালিকা:</b><br>
-                ${sale.cartItems ? sale.cartItems.map(i => `• ${i.name} (x${i.qty}) - ৳${i.price*i.qty}`).join('<br>') : sale.items}
-            </div>
-            <p><b>মোট বিল:</b> ৳${sale.total}</p>
-            <p><b>জমা (Paid):</b> ৳${sale.paid}</p>
-            <p style="color:${sale.due>0?'red':'green'}"><b>বাকি (Due):</b> ৳${sale.due}</p>
-        `;
-        document.getElementById('view-modal').style.display = 'flex';
-    };
+        function closeModal() {
+            playTap();
+            document.getElementById("detailModal").style.display = "none";
+        }
 
-    window.closeModal = (id) => { window.playSound('click'); document.getElementById(id).style.display='none'; }
-    
-    // Navigation & Filters
-    window.switchTab = (id, b) => {
-        window.playSound('click');
-        document.querySelectorAll('.view-section').forEach(d => d.style.display='none');
-        document.getElementById('view-'+id).style.display='block';
-        document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
-        b.classList.add('active');
-    }
-    window.filterStock = () => {
-        const v = document.getElementById('stk-find').value.toLowerCase();
-        document.querySelectorAll('.p-row').forEach(r => r.style.display = r.getAttribute('data-search').includes(v) ? 'flex':'none');
-    };
-    function showToast(m, c="#00b894") { 
-        if(c === "red") window.playSound('error'); // Error sound
-        Toastify({text:m, backgroundColor:c, duration:2000, gravity:"bottom"}).showToast(); 
-    }
-</script>
+        function handleSearch() {
+            const txt = document.getElementById("searchInput").value.toLowerCase();
+            const filter = allData.filter(d => d.name.toLowerCase().includes(txt) || d.models.some(m => m.toLowerCase().includes(txt)));
+            render(filter);
+        }
+
+        function filterCat(cat, btn) {
+            playTap();
+            document.querySelectorAll('.cat-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            render(cat === 'All' ? allData : allData.filter(d => d.category === cat));
+        }
+    </script>
 </body>
 </html>
