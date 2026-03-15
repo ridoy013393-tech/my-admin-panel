@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin Panel - Premium</title>
+    <title>Admin Panel - Premium Secure</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@300;400;600&display=swap');
@@ -14,59 +14,65 @@
         .top-bar h3 { margin: 0; color: #2c3e50; font-size: 20px; font-weight: 700; }
         .stats { font-size: 13px; color: #007bff; font-weight: 600; background: #eef7ff; padding: 5px 10px; border-radius: 20px; }
 
-        #loginScreen { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: white; z-index: 2000; display: flex; justify-content: center; align-items: center; }
-        .login-box { text-align: center; width: 85%; max-width: 320px; padding: 30px; border-radius: 15px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); }
-        .login-box input { width: 100%; padding: 12px; margin: 15px 0; border: 1px solid #ddd; border-radius: 8px; font-size: 16px; outline: none; box-sizing: border-box; }
-        .btn-primary { width: 100%; padding: 12px; background: #007bff; color: white; border: none; border-radius: 8px; font-size: 16px; font-weight: bold; cursor: pointer; transition: 0.3s; }
+        /* Login Screen Styles updated for Email/Pass */
+        #loginScreen { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #f0f2f5; z-index: 2000; display: flex; justify-content: center; align-items: center; }
+        .login-box { text-align: center; width: 85%; max-width: 350px; padding: 40px 30px; border-radius: 20px; box-shadow: 0 10px 40px rgba(0,0,0,0.08); background: white; }
+        .login-box input { width: 100%; padding: 14px; margin: 10px 0; border: 1px solid #ddd; border-radius: 10px; font-size: 15px; outline: none; box-sizing: border-box; background: #fafafa; transition: 0.3s; }
+        .login-box input:focus { border-color: #007bff; background: white; }
+        .btn-primary { width: 100%; padding: 14px; background: #007bff; color: white; border: none; border-radius: 10px; font-size: 16px; font-weight: bold; cursor: pointer; transition: 0.3s; margin-top: 10px; }
+        .btn-primary:active { transform: scale(0.98); }
         
         .container { padding: 15px; max-width: 600px; margin: 0 auto; }
         .search-bar { width: 100%; padding: 14px 20px; border: none; border-radius: 30px; background: white; box-shadow: 0 4px 15px rgba(0,0,0,0.05); margin-bottom: 20px; font-size: 15px; outline: none; box-sizing: border-box; }
 
-        .product-item { 
-            background: white; padding: 12px; border-radius: 12px; margin-bottom: 12px; 
-            display: flex; align-items: center; gap: 12px;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.02); border-left: 4px solid transparent; transition: 0.2s;
-        }
+        .product-item { background: white; padding: 12px; border-radius: 12px; margin-bottom: 12px; display: flex; align-items: center; gap: 12px; box-shadow: 0 2px 5px rgba(0,0,0,0.02); transition: 0.2s; }
         .p-img { width: 60px; height: 60px; border-radius: 8px; object-fit: cover; background: #f8f9fa; flex-shrink: 0; border: 1px solid #eee; }
         .p-info { flex: 1; overflow: hidden; }
-        .p-models { font-size: 11px; color: #666; background: #f1f3f5; padding: 3px 8px; border-radius: 4px; display: inline-block; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 100%; }
-        .p-meta { font-size: 12px; margin-top: 5px; font-weight: 700; color: #27ae60; }
+        .p-models { font-size: 11px; color: #666; background: #f1f3f5; padding: 3px 8px; border-radius: 4px; display: inline-block; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 100%; margin-bottom:4px; }
+        .p-meta { font-size: 12px; font-weight: 700; color: #27ae60; display:flex; gap:10px; flex-wrap:wrap;}
+        .badge-admin { background: #fef9e7; color: #f39c12; padding: 2px 6px; border-radius: 4px; font-size: 10px; }
         
         .actions button { width: 35px; height: 35px; border: none; border-radius: 50%; cursor: pointer; margin-left: 5px; color: white; display: flex; align-items: center; justify-content: center; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
         .btn-edit { background: #f39c12; }
         .btn-del { background: #e74c3c; }
 
         .bottom-nav { position: fixed; bottom: 0; left: 0; width: 100%; background: white; box-shadow: 0 -5px 15px rgba(0,0,0,0.05); display: flex; justify-content: space-around; padding: 12px 0; z-index: 500; border-radius: 20px 20px 0 0; }
-        .nav-item { border: none; background: none; display: flex; flex-direction: column; align-items: center; color: #999; cursor: pointer; font-size: 11px; gap: 5px; font-weight: 600; }
+        .nav-item { border: none; background: none; display: flex; flex-direction: column; align-items: center; color: #999; cursor: pointer; font-size: 11px; gap: 5px; font-weight: 600; width: 25%; }
         .nav-item.active { color: #007bff; }
-        .nav-add { background: linear-gradient(135deg, #007bff, #0056b3); color: white; width: 55px; height: 55px; border-radius: 50%; margin-top: -35px; box-shadow: 0 8px 15px rgba(0,123,255,0.4); border: 4px solid #f0f2f5; display: flex; align-items: center; justify-content: center; }
+        .nav-add { background: linear-gradient(135deg, #007bff, #0056b3); color: white; width: 55px; height: 55px; border-radius: 50%; margin-top: -35px; box-shadow: 0 8px 15px rgba(0,123,255,0.4); border: 4px solid #f0f2f5; display: flex; align-items: center; justify-content: center; position: absolute; left: 50%; transform: translateX(-50%); z-index: 510; }
         .nav-add i { font-size: 22px; color: white; }
 
         .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); z-index: 1500; display: none; justify-content: center; align-items: end; backdrop-filter: blur(3px); }
         .modal { background: white; width: 100%; max-width: 600px; padding: 25px; border-radius: 25px 25px 0 0; max-height: 90vh; overflow-y: auto; animation: slideUp 0.3s ease; }
         @keyframes slideUp { from { transform: translateY(100%); } to { transform: translateY(0); } }
 
-        .form-group { margin-bottom: 15px; }
-        .form-control { width: 100%; padding: 14px; border: 1px solid #e0e0e0; border-radius: 10px; font-family: inherit; box-sizing: border-box; background: #fcfcfc; }
+        .form-group { margin-bottom: 12px; }
+        .form-group label { display: block; margin-bottom: 5px; font-weight: 600; font-size: 13px; color: #555; }
+        .form-control { width: 100%; padding: 12px; border: 1px solid #e0e0e0; border-radius: 8px; font-family: inherit; font-size: 14px; box-sizing: border-box; background: #fcfcfc; }
         #magicSelect { border: 2px solid #007bff; background: #eef7ff; color: #0056b3; font-weight: bold; cursor: pointer; }
+        .flex-row { display: flex; gap: 10px; }
+        .flex-row .form-group { flex: 1; }
     </style>
 </head>
 <body>
 
-    <!-- Sound Audio Tags -->
     <audio id="sndClick" src="https://cdn.pixabay.com/download/audio/2022/03/24/audio_c8b84606f6.mp3?filename=pop-39222.mp3"></audio>
     <audio id="sndSuccess" src="https://cdn.pixabay.com/download/audio/2021/08/04/audio_0625c1539c.mp3?filename=success-1-6297.mp3"></audio>
     <audio id="sndError" src="https://cdn.pixabay.com/download/audio/2022/03/10/audio_c2901e3e78.mp3?filename=error-2-36058.mp3"></audio>
 
+    <!-- Secure Login Screen -->
     <div id="loginScreen">
         <div class="login-box">
-            <i class="fas fa-shield-alt" style="font-size: 40px; color: #007bff; margin-bottom: 15px;"></i>
-            <h3>Admin Panel</h3>
-            <input type="password" id="passInput" placeholder="Password">
-            <button class="btn-primary" onclick="checkPass()">Login</button>
+            <i class="fas fa-shield-alt" style="font-size: 50px; color: #007bff; margin-bottom: 10px;"></i>
+            <h3 style="margin-top: 0; color: #333;">Admin Zone</h3>
+            <p style="font-size: 12px; color: #888; margin-bottom: 20px;">অ্যাক্সেস পেতে লগিন করুন</p>
+            <input type="email" id="emailInput" placeholder="Admin Email" required>
+            <input type="password" id="passInput" placeholder="Password" required>
+            <button class="btn-primary" id="loginBtn" onclick="checkAuth()">Secure Login</button>
         </div>
     </div>
 
+    <!-- Main Admin Panel -->
     <div id="adminPanel" style="display: none;">
         <div class="top-bar">
             <h3>Display Zone</h3>
@@ -83,15 +89,19 @@
         </div>
 
         <div class="bottom-nav">
-            <button class="nav-item active" onclick="playSnd('click'); scrollToTop()"><i class="fas fa-home"></i> Home</button>
+            <button class="nav-item active" onclick="playSnd('click'); scrollToTop()"><i class="fas fa-home"></i><br>Home</button>
+            <button class="nav-item" onclick="openBannerModal()" style="margin-right: 20%;"><i class="fas fa-image"></i><br>Banner</button>
+            
             <button class="nav-item nav-add" onclick="playSnd('click'); openModal('add')"><i class="fas fa-plus"></i></button>
-            <button class="nav-item" onclick="logout()"><i class="fas fa-sign-out-alt"></i> Logout</button>
+            
+            <button class="nav-item" onclick="logout()"><i class="fas fa-sign-out-alt"></i><br>Logout</button>
         </div>
     </div>
 
+    <!-- Product Modal -->
     <div class="modal-overlay" id="modalOverlay">
         <div class="modal">
-            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px; border-bottom:1px solid #eee; padding-bottom:10px;">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:15px; border-bottom:1px solid #eee; padding-bottom:10px;">
                 <h3 id="modalTitle" style="margin:0; color:#333;">Add Product</h3>
                 <button onclick="closeModal()" style="border:none; background:none; font-size:24px; color:#999; cursor:pointer;">&times;</button>
             </div>
@@ -119,21 +129,78 @@
                 </select>
             </div>
 
-            <div class="form-group"><label>Category</label><select class="form-control" id="pCategory"><option value="Samsung">Samsung</option><option value="Xiaomi">Xiaomi</option><option value="Vivo">Vivo</option><option value="Oppo">Oppo</option><option value="Realme">Realme</option><option value="Infinix">Infinix</option><option value="Tecno">Tecno</option></select></div>
-            <div class="form-group"><label>Name</label><input type="text" class="form-control" id="pName" placeholder="Product Name"></div>
-            <div class="form-group"><label>Models</label><textarea class="form-control" id="pModels" style="height:60px"></textarea></div>
-            <div style="display:flex; gap:15px;">
-                <div class="form-group" style="flex:1"><label>Price (৳)</label><input type="number" class="form-control" id="pPrice"></div>
-                <div class="form-group" style="flex:1"><label>Stock</label><input type="number" class="form-control" id="pStock"></div>
+            <div class="flex-row">
+                <div class="form-group"><label>Category</label>
+                    <select class="form-control" id="pCategory">
+                        <option value="Samsung">Samsung</option><option value="Xiaomi">Xiaomi</option><option value="Vivo">Vivo</option>
+                        <option value="Oppo">Oppo</option><option value="Realme">Realme</option><option value="Infinix">Infinix</option>
+                        <option value="Tecno">Tecno</option>
+                    </select>
+                </div>
+                <div class="form-group"><label>Quality</label>
+                    <select class="form-control" id="pQuality">
+                        <option value="Original">Original</option><option value="OLED">OLED</option><option value="AMOLED">AMOLED</option>
+                        <option value="TFT">TFT</option><option value="High Copy">High Copy</option>
+                    </select>
+                </div>
             </div>
-            <div class="form-group"><label>Image URL</label><input type="text" class="form-control" id="pImage"></div>
 
-            <button class="btn-primary" id="saveBtn" onclick="saveData()">Save Product</button>
-            <button class="btn-primary" id="updateBtn" onclick="updateData()" style="background:#f39c12; display:none;">Update Product</button>
+            <div class="form-group"><label>Product Name</label><input type="text" class="form-control" id="pName" placeholder="Product Name"></div>
+            <div class="form-group"><label>Supported Models (Comma separated)</label><textarea class="form-control" id="pModels" style="height:50px"></textarea></div>
+            
+            <div class="flex-row">
+                <div class="form-group"><label>Price (৳)</label><input type="number" class="form-control" id="pPrice"></div>
+                <div class="form-group"><label>Stock</label><input type="number" class="form-control" id="pStock" value="10"></div>
+            </div>
+
+            <div class="flex-row">
+                <div class="form-group"><label>Warranty</label>
+                    <select class="form-control" id="pWarranty">
+                        <option value="No Warranty">No Warranty</option><option value="3 Days Test">3 Days Test</option>
+                        <option value="7 Days">7 Days</option><option value="1 Month">1 Month</option>
+                        <option value="3 Months">3 Months</option>
+                    </select>
+                </div>
+                <div class="form-group"><label>Image URL</label><input type="text" class="form-control" id="pImage" placeholder="https://..."></div>
+            </div>
+
+            <button class="btn-primary" id="saveBtn" onclick="saveData()" style="margin-top:10px;">Save Product</button>
+            <button class="btn-primary" id="updateBtn" onclick="updateData()" style="background:#f39c12; display:none; margin-top:10px;">Update Product</button>
         </div>
     </div>
 
+    <!-- Banner Settings Modal -->
+    <div class="modal-overlay" id="bannerModalOverlay">
+        <div class="modal" style="border-radius:20px; max-width: 400px; padding: 25px;">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:15px; border-bottom:1px solid #eee; padding-bottom:10px;">
+                <h3 style="margin:0; color:#007bff;"><i class="fas fa-bullhorn"></i> Banner Settings</h3>
+                <button onclick="closeBannerModal()" style="border:none; background:none; font-size:24px; color:#999; cursor:pointer;">&times;</button>
+            </div>
+            
+            <div class="form-group">
+                <label>Show Banner?</label>
+                <select class="form-control" id="bActive" style="border-color:#007bff; color:#007bff; font-weight:bold;">
+                    <option value="true">Yes (চালু করুন)</option>
+                    <option value="false">No (বন্ধ রাখুন)</option>
+                </select>
+            </div>
+
+            <p style="font-size:12px; color:#e74c3c; margin-bottom:15px; font-weight:bold;">নোট: যদি ছবি দেন, তবে শুধু ছবি শো করবে। ছবি না দিলে টাইটেল লেখা শো করবে।</p>
+
+            <div class="form-group"><label>Image URL (ঐচ্ছিক)</label><input type="text" class="form-control" id="bImage" placeholder="ছবির লিংক দিন (যদি থাকে)..."></div>
+            
+            <div style="text-align:center; margin:10px 0; font-weight:bold; color:#888;">অথবা (টেক্সট ব্যানার)</div>
+            
+            <div class="form-group"><label>Title (বড় লেখা)</label><input type="text" class="form-control" id="bTitle" placeholder="যেমন: ১০০% অরিজিনাল ডিসপ্লে"></div>
+            <div class="form-group"><label>Subtitle (ছোট লেখা)</label><input type="text" class="form-control" id="bSubtitle" placeholder="যেমন: অর্ডার করুন সাশ্রয়ী মূল্যে!"></div>
+
+            <button class="btn-primary" id="saveBannerBtn" onclick="saveBannerSettings()" style="margin-top:15px; background:#2ecc71;">Save Banner Info</button>
+        </div>
+    </div>
+
+    <!-- Firebase Scripts (Added Auth Script) -->
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
 
     <script>
@@ -144,14 +211,12 @@
           projectId: "soping-8b0b1",
           storageBucket: "soping-8b0b1.firebasestorage.app",
           messagingSenderId: "516440071124",
-          appId: "1:516440071124:web:149502c15abe71c41b9441",
-          measurementId: "G-1SC6C3Q8SS"
+          appId: "1:516440071124:web:149502c15abe71c41b9441"
         };
         firebase.initializeApp(firebaseConfig);
         const db = firebase.firestore();
-        let allData = [];
+        let allData =[];
 
-        // Magic Data
         const magicData = {
             "vivo_y20": { cat: "Vivo", name: "Vivo Y20 / Y12s Display", models: "Y20, Y20i, Y12s, Y15s, Y20G" },
             "vivo_y91": { cat: "Vivo", name: "Vivo Y91 / Y93 / Y95 Display", models: "Y91, Y93, Y95, Y1s" },
@@ -170,32 +235,78 @@
             if(audio) { audio.currentTime = 0; audio.play().catch(e=>{}); }
         }
 
-        if(sessionStorage.getItem("adminLogged")) showAdmin();
+        // --- Firebase Authentication Observer ---
+        // ফায়ারবেস চেক করবে ইউজার লগিন করা আছে কিনা
+        firebase.auth().onAuthStateChanged((user) => {
+            if (user) {
+                // ইউজার লগিন করা থাকলে প্যানেল দেখাবে
+                document.getElementById("loginScreen").style.display = "none";
+                document.getElementById("adminPanel").style.display = "block";
+                loadData();
+            } else {
+                // লগিন না করা থাকলে লগিন স্ক্রিন দেখাবে
+                document.getElementById("loginScreen").style.display = "flex";
+                document.getElementById("adminPanel").style.display = "none";
+            }
+        });
 
-        function checkPass() {
-            if(document.getElementById("passInput").value === "1234") {
-                sessionStorage.setItem("adminLogged", "true");
-                playSnd('success');
-                showAdmin();
-            } else { alert("Wrong Password!"); playSnd('error'); }
+        // --- Secure Login Function ---
+        function checkAuth() {
+            const email = document.getElementById("emailInput").value.trim();
+            const pass = document.getElementById("passInput").value.trim();
+            const btn = document.getElementById("loginBtn");
+            
+            if(!email || !pass) {
+                alert("ইমেইল ও পাসওয়ার্ড দিতে হবে!");
+                playSnd('error');
+                return;
+            }
+
+            btn.innerText = "Checking...";
+            
+            // ফায়ারবেসের মাধ্যমে ইমেইল-পাসওয়ার্ড চেক করা
+            firebase.auth().signInWithEmailAndPassword(email, pass)
+                .then((userCredential) => {
+                    playSnd('success');
+                    btn.innerText = "Secure Login";
+                    // লগিন সফল হলে onAuthStateChanged স্বয়ংক্রিয়ভাবে প্যানেল ওপেন করে দিবে
+                })
+                .catch((error) => {
+                    alert("ভুল ইমেইল বা পাসওয়ার্ড! দয়া করে আবার চেষ্টা করুন।");
+                    playSnd('error');
+                    btn.innerText = "Secure Login";
+                });
         }
-        function showAdmin() { document.getElementById("loginScreen").style.display = "none"; document.getElementById("adminPanel").style.display = "block"; loadData(); }
-        function logout() { sessionStorage.removeItem("adminLogged"); location.reload(); }
+
+        // --- Secure Logout Function ---
+        function logout() {
+            playSnd('click');
+            firebase.auth().signOut().then(() => {
+                location.reload(); // পেজ রিলোড হলে অটোমেটিক লগআউট হয়ে যাবে
+            }).catch((error) => {
+                alert("লগআউট করতে সমস্যা হচ্ছে: " + error.message);
+            });
+        }
 
         function loadData() {
             db.collection("displays").orderBy("createdAt", "desc").onSnapshot(snap => {
-                allData = [];
+                allData =[];
                 const list = document.getElementById("productList");
                 list.innerHTML = "";
                 snap.forEach(doc => {
+                    if(doc.id === "banner_settings") return;
                     let d = doc.data();
                     list.innerHTML += `
                     <div class="product-item">
                         <img src="${d.image || 'https://via.placeholder.com/50'}" class="p-img">
                         <div class="p-info">
-                            <h4>${d.name}</h4>
+                            <h4 style="margin:0 0 5px;">${d.name}</h4>
                             <div class="p-models">${d.models.join(', ')}</div>
-                            <div class="p-meta">${d.price}৳ | Stk: ${d.stock}</div>
+                            <div class="p-meta">
+                                <span>${d.price}৳</span> 
+                                <span>Stk: ${d.stock}</span>
+                                <span class="badge-admin">${d.quality || 'N/A'}</span>
+                            </div>
                         </div>
                         <div class="actions">
                             <button class="btn-edit" onclick="playSnd('click'); editMode('${doc.id}')"><i class="fas fa-pen"></i></button>
@@ -217,6 +328,8 @@
                 price: Number(price), 
                 stock: Number(document.getElementById("pStock").value), 
                 category: document.getElementById("pCategory").value,
+                quality: document.getElementById("pQuality").value,
+                warranty: document.getElementById("pWarranty").value,
                 image: document.getElementById("pImage").value,
                 models: document.getElementById("pModels").value.split(',').map(m => m.trim())
             };
@@ -228,7 +341,8 @@
             playSnd('click');
             document.getElementById("saveBtn").innerText = "Saving...";
             db.collection("displays").add({...data, createdAt: firebase.firestore.FieldValue.serverTimestamp()})
-              .then(() => { closeModal(); playSnd('success'); document.getElementById("saveBtn").innerText = "Save Product"; });
+              .then(() => { closeModal(); playSnd('success'); document.getElementById("saveBtn").innerText = "Save Product"; })
+              .catch(err => { alert(err.message); document.getElementById("saveBtn").innerText = "Save Product"; });
         }
 
         function editMode(id) {
@@ -238,6 +352,8 @@
             document.getElementById("pPrice").value = item.price;
             document.getElementById("pStock").value = item.stock;
             document.getElementById("pCategory").value = item.category;
+            document.getElementById("pQuality").value = item.quality || "Original";
+            document.getElementById("pWarranty").value = item.warranty || "No Warranty";
             document.getElementById("pModels").value = item.models.join(', ');
             document.getElementById("pImage").value = item.image;
             document.getElementById("saveBtn").style.display = "none";
@@ -251,14 +367,15 @@
             if(!data) return;
             db.collection("displays").doc(id).update(data).then(() => {
                 playSnd('success'); closeModal();
-            });
+            }).catch(err => alert(err.message));
         }
 
         function deleteItem(id) {
             playSnd('error'); 
             if(confirm("নিশ্চিত ডিলিট করবেন?")) {
-                db.collection("displays").doc(id).delete();
-                playSnd('click');
+                db.collection("displays").doc(id).delete()
+                  .then(() => playSnd('click'))
+                  .catch(err => alert("Permission Denied: " + err.message));
             }
         }
 
@@ -270,6 +387,8 @@
                 document.getElementById("pCategory").value = d.cat;
                 document.getElementById("pName").value = d.name;
                 document.getElementById("pModels").value = d.models;
+                document.getElementById("pQuality").value = "Original";
+                document.getElementById("pWarranty").value = "3 Days Test";
             }
         }
         
@@ -278,10 +397,58 @@
             if(type==='add') {
                 document.getElementById("saveBtn").style.display = "block";
                 document.getElementById("updateBtn").style.display = "none";
-                document.querySelectorAll('input,textarea').forEach(i=>i.value='');
+                document.querySelectorAll('#modalOverlay input[type="text"], #modalOverlay input[type="number"], #modalOverlay textarea').forEach(i=>i.value='');
+                document.getElementById("pStock").value = '10';
             }
         }
         function closeModal() { document.getElementById("modalOverlay").style.display = "none"; playSnd('click'); }
+        
+        function openBannerModal() {
+            playSnd('click');
+            document.getElementById("bannerModalOverlay").style.display = "flex";
+            
+            db.collection("displays").doc("banner_settings").get().then(doc => {
+                if(doc.exists) {
+                    let d = doc.data();
+                    document.getElementById("bTitle").value = d.title || "";
+                    document.getElementById("bSubtitle").value = d.subtitle || "";
+                    document.getElementById("bImage").value = d.imageUrl || "";
+                    document.getElementById("bActive").value = d.isActive !== false ? "true" : "false";
+                }
+            });
+        }
+
+        function closeBannerModal() { 
+            document.getElementById("bannerModalOverlay").style.display = "none"; 
+            playSnd('click'); 
+        }
+
+        function saveBannerSettings() {
+            playSnd('click');
+            const btn = document.getElementById("saveBannerBtn");
+            btn.innerText = "Saving...";
+            
+            const bannerData = {
+                title: document.getElementById("bTitle").value,
+                subtitle: document.getElementById("bSubtitle").value,
+                imageUrl: document.getElementById("bImage").value,
+                isActive: document.getElementById("bActive").value === "true"
+            };
+            
+            db.collection("displays").doc("banner_settings").set(bannerData, { merge: true })
+            .then(() => {
+                playSnd('success');
+                alert("ব্যানার সফলভাবে আপডেট হয়েছে!");
+                btn.innerText = "Save Banner Info";
+                closeBannerModal();
+            })
+            .catch(err => {
+                alert("এরর: ডাটা সেভ হয়নি। " + err.message);
+                btn.innerText = "Save Banner Info";
+                playSnd('error');
+            });
+        }
+
         function filterList() {
             const txt = document.getElementById("adminSearch").value.toLowerCase();
             document.querySelectorAll(".product-item").forEach(el => el.style.display = el.innerText.toLowerCase().includes(txt) ? "flex" : "none");
