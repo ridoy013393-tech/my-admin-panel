@@ -74,7 +74,7 @@
         .model-box { background: var(--model-bg); padding: 8px; border-radius: 8px; font-size: 12px; color: var(--text); font-weight: 700; margin-bottom: 10px; border: 1px solid var(--border); display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; line-height: 1.5; height: 38px; }
 
         .btn-wa { background: #25D366; color: white; text-align: center; padding: 10px; border-radius: 10px; text-decoration: none; font-weight: bold; font-size: 14px; display: flex; align-items: center; justify-content: center; gap: 6px; flex: 1; border: none; cursor: pointer; }
-        .btn-share { background: var(--primary); color: white; width: 40px; height: 40px; border-radius: 10px; display: flex; align-items: center; justify-content: center; border: none; cursor: pointer; font-size: 16px; }
+        .btn-share { background: #007bff; color: white; width: 40px; height: 40px; border-radius: 10px; display: flex; align-items: center; justify-content: center; border: none; cursor: pointer; font-size: 16px; }
 
         /* Skeleton Loader */
         .skeleton { background: var(--card-bg); border-radius: 15px; height: 260px; position: relative; overflow: hidden; border: 1px solid var(--border); }
@@ -94,36 +94,12 @@
         .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); z-index: 2000; display: none; justify-content: center; align-items: center; backdrop-filter: blur(5px); }
         .modal-box { background: var(--card-bg); color: var(--text); width: 85%; max-width: 400px; border-radius: 20px; padding: 25px; position: relative; animation: popUp 0.3s ease; }
         @keyframes popUp { from { transform: scale(0.8); opacity: 0; } to { transform: scale(1); opacity: 1; } }
-        
-        /* Modal Image Zoom Cursor */
-        .modal-img-wrapper { background: #fff; padding: 10px; border-radius: 10px; margin-bottom: 15px; text-align: center; cursor: zoom-in; position: relative; }
-        .modal-img-wrapper::after { content: '\f00e'; font-family: 'Font Awesome 6 Free'; font-weight: 900; position: absolute; bottom: 10px; right: 10px; color: rgba(0,0,0,0.3); font-size: 20px; pointer-events: none; }
-        
+        .modal-img-wrapper { background: #fff; padding: 10px; border-radius: 10px; margin-bottom: 15px; }
         .full-models { background: var(--model-bg); padding: 12px; border-radius: 10px; border: 1px solid var(--border); font-weight: 600; line-height: 1.6; font-size: 14px; max-height: 120px; overflow-y: auto; margin-bottom: 10px; }
         
         .badge-group { display: flex; gap: 10px; margin-bottom: 15px; }
         .badge-q { background: #f39c12; color: #fff; padding: 4px 10px; border-radius: 6px; font-size: 12px; font-weight: bold; }
         .badge-w { background: #9b59b6; color: #fff; padding: 4px 10px; border-radius: 6px; font-size: 12px; font-weight: bold; }
-
-        /* Empty State Illustration */
-        .empty-state { grid-column: 1 / -1; text-align: center; padding: 50px 20px; color: var(--text-muted); }
-        .empty-state svg { width: 100px; height: 100px; opacity: 0.5; margin-bottom: 15px; color: var(--text-muted); }
-        .empty-state h3 { font-size: 20px; margin-bottom: 5px; color: var(--text); }
-
-        /* Lightbox for Image Zoom */
-        .lightbox-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); z-index: 3000; display: none; justify-content: center; align-items: center; cursor: zoom-out; animation: fadeIn 0.3s ease; }
-        .lightbox-overlay img { max-width: 95%; max-height: 95%; border-radius: 10px; object-fit: contain; animation: zoomUp 0.3s ease; }
-        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-        @keyframes zoomUp { from { transform: scale(0.8); } to { transform: scale(1); } }
-
-        /* Toast Notification */
-        .toast { visibility: hidden; min-width: 250px; background-color: #333; color: #fff; text-align: center; border-radius: 25px; padding: 12px 20px; position: fixed; z-index: 4000; left: 50%; bottom: 30px; transform: translateX(-50%); font-size: 14px; box-shadow: 0px 4px 15px rgba(0,0,0,0.3); opacity: 0; transition: opacity 0.3s, bottom 0.3s; font-weight: 600; display: flex; align-items: center; justify-content: center; gap: 8px; }
-        .toast.show { visibility: visible; opacity: 1; bottom: 50px; }
-        body.dark-mode .toast { background-color: #555; }
-
-        /* Back to Top Button */
-        .back-to-top { position: fixed; bottom: 30px; right: 20px; z-index: 1000; background: var(--primary); color: white; border: none; width: 45px; height: 45px; border-radius: 50%; font-size: 20px; cursor: pointer; display: none; align-items: center; justify-content: center; box-shadow: 0 4px 10px rgba(0,123,255,0.4); transition: 0.3s; }
-        .back-to-top:hover { transform: translateY(-5px); background: #0056b3; }
 
         /* Footer */
         footer { background: var(--footer-bg); color: #ddd; text-align: center; padding: 30px 20px; border-radius: 30px 30px 0 0; font-size: 14px; }
@@ -196,8 +172,7 @@
         <div class="modal-box">
             <button onclick="closeModal()" style="position:absolute; right:15px; top:15px; border:none; background:rgba(0,0,0,0.1); width:30px; height:30px; border-radius:50%; font-size:20px; color:var(--text); cursor:pointer; z-index:10;">&times;</button>
             
-            <!-- Clicking this wrapper will trigger Lightbox -->
-            <div class="modal-img-wrapper" onclick="openLightbox()">
+            <div class="modal-img-wrapper">
                 <img id="mImg" src="" style="width:100%; height:160px; object-fit:contain;">
             </div>
             
@@ -220,17 +195,6 @@
             </div>
         </div>
     </div>
-
-    <!-- Lightbox (For Image Zoom) -->
-    <div class="lightbox-overlay" id="lightbox" onclick="closeLightbox()">
-        <img id="lightboxImg" src="" alt="Full Screen Product">
-    </div>
-
-    <!-- Toast Notification -->
-    <div id="toast" class="toast"><i class="fas fa-check-circle" style="color:#2ecc71;"></i> <span>লিংক কপি করা হয়েছে!</span></div>
-
-    <!-- Back to Top Button -->
-    <button id="backToTop" class="back-to-top" onclick="scrollToTop()"><i class="fas fa-arrow-up"></i></button>
 
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
@@ -279,7 +243,7 @@
             }
         }
 
-        // Fetch Dynamic Banner
+        // Fetch Dynamic Banner (Now loading from allowed "displays" folder)
         db.collection("displays").doc("banner_settings").onSnapshot(doc => {
             const bannerArea = document.getElementById("bannerArea");
             if (doc.exists) {
@@ -288,7 +252,9 @@
                     bannerArea.style.display = "none";
                     return;
                 }
+                
                 bannerArea.style.display = "block";
+                
                 if (data.imageUrl && data.imageUrl.trim() !== "") {
                     bannerArea.innerHTML = `
                         <div class="banner banner-img-only">
@@ -317,161 +283,115 @@
             }
         });
 
-        // Fetch Products Data
+        // Fetch Products Data (Ignoring banner setting file)
         db.collection("displays").orderBy("createdAt", "desc").onSnapshot(snap => {
-            allData =
-                snap.forEach(doc => {
-            if(doc.id === "banner_settings") return; // ব্যানার ফাইলটি লিস্টে দেখাবে না
-            allData.push({id: doc.id, ...doc.data()});
+            allData =[];
+            snap.forEach(doc => {
+                if(doc.id === "banner_settings") return; // ব্যানার ফাইলটি লিস্টে দেখাবে না
+                allData.push({id: doc.id, ...doc.data()});
+            });
+            currentFilteredData = allData;
+            displayLimit = 12;
+            renderData();
         });
-        currentFilteredData = allData;
-        displayLimit = 12;
-        renderData();
-    });
 
-    // Render with Load More
-    function renderData() {
-        const el = document.getElementById("productList");
-        el.innerHTML = "";
-        const loadMoreArea = document.getElementById("loadMoreArea");
+        // Render with Load More
+        function renderData() {
+            const el = document.getElementById("productList");
+            el.innerHTML = "";
+            const loadMoreArea = document.getElementById("loadMoreArea");
 
-        // 4. Empty State Graphic (No Result Found)
-        if(!currentFilteredData.length) { 
-            el.innerHTML = `
-                <div class="empty-state">
-                    <svg fill="currentColor" viewBox="0 0 24 24">
-                        <path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/>
-                        <path fill="none" d="M0 0h24v24H0z"/>
-                        <circle cx="9.5" cy="9.5" r="1.5" fill="#f39c12" />
-                    </svg>
-                    <h3>কোনো পণ্য পাওয়া যায়নি!</h3>
-                    <p>আপনার খোঁজা মডেলটি বর্তমানে আমাদের স্টকে নেই।</p>
-                </div>`; 
-            loadMoreArea.style.display = "none";
-            return; 
-        }
+            if(!currentFilteredData.length) { 
+                el.innerHTML = "<p style='grid-column:1/-1; text-align:center;'>কোনো পণ্য পাওয়া যায়নি</p>"; 
+                loadMoreArea.style.display = "none";
+                return; 
+            }
 
-        const itemsToShow = currentFilteredData.slice(0, displayLimit);
-        
-        itemsToShow.forEach(p => {
-            const img = p.image || "https://via.placeholder.com/150";
-            const safeData = JSON.stringify(p).replace(/"/g, '&quot;').replace(/'/g, "&#39;");
+            const itemsToShow = currentFilteredData.slice(0, displayLimit);
             
-            el.innerHTML += `
-            <div class="card" onclick='openModal(${safeData})'>
-                <div class="card-img">
-                    <span class="stock-badge">Stock: ${p.stock}</span>
-                    <img src="${img}" loading="lazy">
-                    <span class="price-badge">${p.price} ৳</span>
-                </div>
-                <div class="card-body">
-                    <h3 class="card-title">${p.name}</h3>
-                    <div class="model-box">${p.models.join(', ')}</div>
-                    <button class="btn-wa" style="width:100%; margin-top:auto;"><i class="fab fa-whatsapp"></i> বিস্তারিত</button>
-                </div>
-            </div>`;
-        });
+            itemsToShow.forEach(p => {
+                const img = p.image || "https://via.placeholder.com/150";
+                const safeData = JSON.stringify(p).replace(/"/g, '&quot;').replace(/'/g, "&#39;");
+                
+                el.innerHTML += `
+                <div class="card" onclick='openModal(${safeData})'>
+                    <div class="card-img">
+                        <span class="stock-badge">Stock: ${p.stock}</span>
+                        <img src="${img}" loading="lazy">
+                        <span class="price-badge">${p.price} ৳</span>
+                    </div>
+                    <div class="card-body">
+                        <h3 class="card-title">${p.name}</h3>
+                        <div class="model-box">${p.models.join(', ')}</div>
+                        <button class="btn-wa" style="width:100%; margin-top:auto;"><i class="fab fa-whatsapp"></i> বিস্তারিত</button>
+                    </div>
+                </div>`;
+            });
 
-        if(currentFilteredData.length > displayLimit) {
-            loadMoreArea.style.display = "block";
-        } else {
-            loadMoreArea.style.display = "none";
+            if(currentFilteredData.length > displayLimit) {
+                loadMoreArea.style.display = "block";
+            } else {
+                loadMoreArea.style.display = "none";
+            }
         }
-    }
 
-    function loadMore() {
-        playTap();
-        displayLimit += 12;
-        renderData();
-    }
-
-    function openModal(data) {
-        playTap();
-        currentShareData = data;
-        document.getElementById("mImg").src = data.image || "https://via.placeholder.com/150";
-        document.getElementById("mTitle").innerText = data.name;
-        document.getElementById("mPrice").innerText = data.price + " ৳";
-        document.getElementById("mModels").innerText = data.models.join(', ');
-        
-        document.getElementById("mQuality").innerText = data.quality || "Original";
-        document.getElementById("mWarranty").innerText = data.warranty || "No Warranty";
-        
-        document.getElementById("mBtn").href = `https://wa.me/+8801690191751?text=Order: ${data.name} (%0APrice: ${data.price} TK)`;
-        document.getElementById("detailModal").style.display = "flex";
-    }
-
-    function closeModal() {
-        playTap();
-        document.getElementById("detailModal").style.display = "none";
-    }
-
-    // 3. Lightbox Function for Image Zoom
-    function openLightbox() {
-        playTap();
-        const imgSrc = document.getElementById("mImg").src;
-        document.getElementById("lightboxImg").src = imgSrc;
-        document.getElementById("lightbox").style.display = "flex";
-    }
-
-    function closeLightbox() {
-        playTap();
-        document.getElementById("lightbox").style.display = "none";
-    }
-
-    // 1. Toast Notification Logic
-    function showToast() {
-        const toast = document.getElementById("toast");
-        toast.className = "toast show";
-        setTimeout(function(){ toast.className = toast.className.replace("show", ""); }, 2000);
-    }
-
-    function shareProduct() {
-        playTap();
-        if(!currentShareData) return;
-        const shareText = `পণ্য: ${currentShareData.name}\nদাম: ${currentShareData.price}৳\nমডেল: ${currentShareData.models.join(', ')}\nঅর্ডার করতে যোগাযোগ করুন: +8801690191751`;
-        
-        if (navigator.share) {
-            navigator.share({
-                title: currentShareData.name,
-                text: shareText
-            }).catch(err => console.log(err));
-        } else {
-            navigator.clipboard.writeText(shareText);
-            // Alert এর বদলে Toast মেসেজ
-            showToast();
+        function loadMore() {
+            playTap();
+            displayLimit += 12;
+            renderData();
         }
-    }
 
-    function handleSearch() {
-        const txt = document.getElementById("searchInput").value.toLowerCase();
-        currentFilteredData = allData.filter(d => d.name.toLowerCase().includes(txt) || d.models.some(m => m.toLowerCase().includes(txt)));
-        displayLimit = 12;
-        renderData();
-    }
-
-    function filterCat(cat, btn) {
-        playTap();
-        document.querySelectorAll('.cat-btn').forEach(b => b.classList.remove('active'));
-        btn.classList.add('active');
-        currentFilteredData = cat === 'All' ? allData : allData.filter(d => d.category === cat);
-        displayLimit = 12;
-        renderData();
-    }
-
-    // 2. Back to Top Logic
-    window.onscroll = function() {
-        let backToTopBtn = document.getElementById("backToTop");
-        if (document.body.scrollTop > 300 || document.documentElement.scrollTop > 300) {
-            backToTopBtn.style.display = "flex";
-        } else {
-            backToTopBtn.style.display = "none";
+        function openModal(data) {
+            playTap();
+            currentShareData = data;
+            document.getElementById("mImg").src = data.image || "https://via.placeholder.com/150";
+            document.getElementById("mTitle").innerText = data.name;
+            document.getElementById("mPrice").innerText = data.price + " ৳";
+            document.getElementById("mModels").innerText = data.models.join(', ');
+            
+            document.getElementById("mQuality").innerText = data.quality || "Original";
+            document.getElementById("mWarranty").innerText = data.warranty || "No Warranty";
+            
+            document.getElementById("mBtn").href = `https://wa.me/+8801690191751?text=Order: ${data.name} (%0APrice: ${data.price} TK)`;
+            document.getElementById("detailModal").style.display = "flex";
         }
-    };
 
-    function scrollToTop() {
-        playTap();
-        window.scrollTo({ top: 0, behavior: 'smooth' });
-    }
-</script>
+        function closeModal() {
+            playTap();
+            document.getElementById("detailModal").style.display = "none";
+        }
+
+        function shareProduct() {
+            playTap();
+            if(!currentShareData) return;
+            const shareText = `পণ্য: ${currentShareData.name}\nদাম: ${currentShareData.price}৳\nমডেল: ${currentShareData.models.join(', ')}\nঅর্ডার করতে যোগাযোগ করুন: +8801690191751`;
+            
+            if (navigator.share) {
+                navigator.share({
+                    title: currentShareData.name,
+                    text: shareText
+                }).catch(err => console.log(err));
+            } else {
+                navigator.clipboard.writeText(shareText);
+                alert("পণ্যের তথ্য কপি করা হয়েছে! আপনি এখন যেকোনো জায়গায় পেস্ট করে পাঠাতে পারেন।");
+            }
+        }
+
+        function handleSearch() {
+            const txt = document.getElementById("searchInput").value.toLowerCase();
+            currentFilteredData = allData.filter(d => d.name.toLowerCase().includes(txt) || d.models.some(m => m.toLowerCase().includes(txt)));
+            displayLimit = 12;
+            renderData();
+        }
+
+        function filterCat(cat, btn) {
+            playTap();
+            document.querySelectorAll('.cat-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            currentFilteredData = cat === 'All' ? allData : allData.filter(d => d.category === cat);
+            displayLimit = 12;
+            renderData();
+        }
+    </script>
 </body>
 </html>
